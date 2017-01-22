@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class oe900cubes : MonoBehaviour {
-    //public GameObject[] cubeArr;
+    //--- otazka: jak spravne deklarovat a pouzivat 2D a 3D pole
+    //public GameObject[][] cubeMatrix; //nefungovalo	
+    //-------------------------------------------------	
+  
     //public GameObject[] cubeMatrix1; //vertikalni
     public GameObject[] cubeMatrix2; //horizontalni
     int numCube = 30;
