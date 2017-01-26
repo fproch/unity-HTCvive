@@ -3,8 +3,6 @@ using System.IO; //streamReader
 using System.Collections; //JSON
 using System.Collections.Generic;
 
-
-
 public class oeData16b : MonoBehaviour
 {
     //ulozeni kompletni pozice jedineho objektu - do txt souboru, jen na jednotlive radky.. viz. kod
@@ -86,25 +84,24 @@ public class oeData16b : MonoBehaviour
         {
             //automaticke ulozeni po cca sedmi sec.
             rend1.material.color = Color.red;
-            saveData();
+            saveData(goObj0);
         }
-
-
     }
 
     //------------------------------------------------------------------------------------------------
-      private void saveData()
+     private void saveData(GameObject go)
     {
-
         //x//dataLines16 = { "x", "y", "z" };
-        dataLines16[0] = (Mathf.Round(goObj0.transform.position.x * 1000) / 1000).ToString();
-        dataLines16[1] = (Mathf.Round(goObj0.transform.position.y * 1000) / 1000).ToString();
-        dataLines16[2] = (Mathf.Round(goObj0.transform.position.z * 1000) / 1000).ToString();
-        dataLines16[3] = (Mathf.Round(goObj0.transform.rotation.x * 1000) / 1000).ToString();
-        dataLines16[4] = (Mathf.Round(goObj0.transform.rotation.y * 1000) / 1000).ToString();
-        dataLines16[5] = (Mathf.Round(goObj0.transform.rotation.z * 1000) / 1000).ToString();
+        dataLines16[0] = (Mathf.Round(go.transform.position.x * 1000) / 1000).ToString();
+        dataLines16[1] = (Mathf.Round(go.transform.position.y * 1000) / 1000).ToString();
+        dataLines16[2] = (Mathf.Round(go.transform.position.z * 1000) / 1000).ToString();
+
+        dataLines16[3] = (Mathf.Round(go.transform.eulerAngles.x * 1000) / 1000).ToString();
+        dataLines16[4] = (Mathf.Round(go.transform.eulerAngles.y * 1000) / 1000).ToString();
+        dataLines16[5] = (Mathf.Round(go.transform.eulerAngles.z * 1000) / 1000).ToString();
+        //dataLines16[5] = (Mathf.Round(go.transform.eulerAngles.w * 1000) / 1000).ToString();
         System.IO.File.WriteAllLines(@"d:\"+data16File, dataLines16); 
-    }
+    } 
 
 
     private void loadData()
@@ -126,38 +123,17 @@ public class oeData16b : MonoBehaviour
         float rx = float.Parse(dataLines16[3]);
         float ry = float.Parse(dataLines16[4]);
         float rz = float.Parse(dataLines16[5]);
+        float rw = float.Parse(dataLines16[5]);
         //goObj0.transform.position = new Vector3(dx,dy,dz);
         Debug.Log("x:"+ dx.ToString());
         Debug.Log("rx:" + rx.ToString());
         goObj0.transform.position = new Vector3(dx, dy, dz);
+        Vector3 objRot = new Vector3(rx, ry, rz);
 
-        //Quaternion target = Quaternion.Euler(dx, dy, dz);
-        goObj0.transform.Rotate(new Vector3(rx, ry, rz));
+        Quaternion target = Quaternion.Euler(dx, dy, dz);
+        goObj0.transform.Rotate(objRot);
         //goObj0.transform.rotation = Quaternion.Slerp(transform.rotation, originalRotationValue.rotation, Time.time * 10);
-        //Local????
-
+        //Quaternion rotation = Quaternion.LookRotation(goObj0.transform.position);
+        //Quaternion current = transform.localRotation;
     }
-    
-
-    private void saveDataTest()
-    {
-        // Example #2:
-        string[] lines = { "First line", "Second line", "Third line" };
-        System.IO.File.WriteAllLines(@"d:\unity-temp-data\WriteLines.txt", lines);
-
-        // Example #2: Write one string to a text file.
-        string text = "A class is the most powerful data type in C#. Like a structure, " +
-                       "a class defines the data and behavior of the data type. ";
-        System.IO.File.WriteAllText(@"d:\unity-temp-data\WriteText.txt", text);
-
-        // Example #3: Write only some strings in an array to a file.
-        using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter(@"d:\unity-temp-data\WriteLines2.txt"))
-        {
-            foreach (string line in lines)
-            {
-               if (!line.Contains("Second"))  {   file.WriteLine(line);  }
-            }
-        }
-    }   
 }
