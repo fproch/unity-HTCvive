@@ -123,15 +123,12 @@ public class oeData16b : MonoBehaviour
         float rx = float.Parse(dataLines16[3]);
         float ry = float.Parse(dataLines16[4]);
         float rz = float.Parse(dataLines16[5]);
-        float rw = float.Parse(dataLines16[5]);
+        //float rw = float.Parse(dataLines16[5]);
         //goObj0.transform.position = new Vector3(dx,dy,dz);
         Debug.Log("x:"+ dx.ToString());
         Debug.Log("rx:" + rx.ToString());
         goObj0.transform.position = new Vector3(dx, dy, dz);
-        Vector3 objRot = new Vector3(rx, ry, rz);
-
-        Quaternion target = Quaternion.Euler(dx, dy, dz);
-        goObj0.transform.Rotate(objRot);
+        goObj0.transform.eulerAngles = new Vector3(rx, ry, rz); 
         //goObj0.transform.rotation = Quaternion.Slerp(transform.rotation, originalRotationValue.rotation, Time.time * 10);
         //Quaternion rotation = Quaternion.LookRotation(goObj0.transform.position);
         //Quaternion current = transform.localRotation;
