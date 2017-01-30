@@ -18,7 +18,7 @@ na krychli jsou navázány skripry:<br />
 V další kroku přihrát soubor: <b>oeZERO16-2img.unitypackage</b><br />
 zde je navíc krychle cubeImg + textura s obrázkem<br />
 
-<img src="https://raw.githubusercontent.com/octopusengine/unity-HTCvive/master/oeZERO16/Images/.jpg" alt="fig5-ball-schematic.jpg" width="650">
+<img src="https://raw.githubusercontent.com/octopusengine/unity-HTCvive/master/oeZERO16/images/zero16a.jpg" alt="zero16a.jpg" width="650">
 
 
 
