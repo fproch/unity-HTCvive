@@ -2,6 +2,7 @@ Testování úplně základních dovedností s Unity3D.<br />
 <i>snaha byla, aby to nebylo vázáno na konkrétní platformu - dokonce se zde snažíme oprostit se od virtuální reality a začít tvořit skripty použitelné i na Androidu - snadno pak přenostitelné a HTCvive nebo jiný headset VR.</i> <br />
  <br />
 Ke stažení je dočasně k dispozici jednoduchý "asset" - scéna, na které je jediná krychle a na ní text + světýlka LED.<br />
+<code>Import package / Custom package</code>
 
 https://www.dropbox.com/sh/axpr8yib4yh2cug/AACxXRnmrPekDEc1E7-sxFPJa?dl=0<br />
 
