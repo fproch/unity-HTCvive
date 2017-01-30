@@ -14,6 +14,9 @@ na krychli jsou navázány skripry:<br />
 <br />
 - <b>oeZeroDATA.cs</b>každých 100 frame se aktualizuje text, který ukazuje pozici a natočení kostky, zkušebně také problikává první LED světlo.. z bílé na červeno. (Randomize)	<br />
 <br />
+<hr />
+V další kroku přihrát soubor: <b>oeZERO16-2img.unitypackage</b><br />
+zde je navíc krychle cubeImg + textura s obrázkem<br />
 
 
 
