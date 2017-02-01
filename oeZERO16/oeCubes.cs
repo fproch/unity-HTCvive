@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class oe900cubes : MonoBehaviour
+public class oeCubes : MonoBehaviour
 {
     //(1)
     public GameObject[,] cubeMatrix2;
-    public int numCube = 8; //30x30=900 //public se objeví v Extending Editoru!
+    
+    public int numCube = 15; //30x30=900 //public se objeví v Extending Editoru!
+    public bool onlyBlack = true; //
+    public int numRandom = 10;
+    //--------------------------------
+
     int ii = 0;
 
     public Renderer rend2;
@@ -45,11 +50,18 @@ public class oe900cubes : MonoBehaviour
                 cubeMatrix2[i, j].transform.localPosition = new Vector3(startMatrix.x + i, startMatrix.y, startMatrix.z + j);
 
                 rend2 = cubeMatrix2[i, j].GetComponent<Renderer>();
-                //float deltaRnd2 = Mathf.Floor(Random.Range(0, 20));
-                //if (deltaRnd2 == 1) rend2.material.color = Color.gray;
-                //if (deltaRnd2 == 2) rend2.material.color = Color.white;
-                //if (deltaRnd2 > 2) rend2.material.color = Color.black;
-                rend2.material.color = Color.black;
+                if (onlyBlack)
+                {
+                    rend2.material.color = Color.black;
+                }
+                else
+                {
+                    float deltaRnd2 = Mathf.Floor(Random.Range(0, numRandom));
+                    if (deltaRnd2 == 1) rend2.material.color = Color.gray;
+                    if (deltaRnd2 == 2) rend2.material.color = Color.white;
+                    if (deltaRnd2 > 2) rend2.material.color = Color.black;
+                }
+                    
             }
         }
     }
