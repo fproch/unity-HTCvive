@@ -1,7 +1,7 @@
 Testování úplně základních dovedností s Unity3D. A základní <b>oeApp</b> s převahou C-sharp<br />
 <i>snaha byla, aby to nebylo vázáno na konkrétní platformu - dokonce se zde snažíme oprostit se od virtuální reality a začít tvořit skripty použitelné i na Androidu - snadno pak přenostitelné a HTCvive nebo jiný headset VR.</i> <br />
 <br />
-<b>oeZERO16.unitypackage (3.34 MB)</b> https://www.dropbox.com/sh/axpr8yib4yh2cug/AACxXRnmrPekDEc1E7-sxFPJa?dl=0<br />
+<b>oeZERO1601.unitypackage (3.34 MB)</b> https://www.dropbox.com/sh/axpr8yib4yh2cug/AACxXRnmrPekDEc1E7-sxFPJa?dl=0<br />
 Tento jednoduchý "asset" (dočasně k dispozici ke stažení s úplnými zdroji 2016) - kompletní scéna, na které je jediná krychle a na ní text, logo, obrázek + světýlka LED. Do scény se naimportuje:<br />
 <code>Import package / Custom package</code>
 
