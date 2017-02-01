@@ -19,7 +19,7 @@ použití<br />
 <code>int numT = myInfoTest.GetNum(2); //vrati dvoj nasobek </code><br />
 <code>Debug.Log("oeInfo:GetNum():" + numT.ToString()); </code><br />
 <br />
-obecný skript (mimo gameobject - ale ve jmenném prostroru, takže ostatní ho "vidí"<br />
+- <b>oeObjClass</b> obecná třída (mimo gameobject - ale ve jmenném prostroru, takže ostatní skript "vidí")<br />
 použití<br />
 <code>oeObjClass oeZero = new oeObjClass();</code><br />
 <code>oeZero.SetName("testZero");</code><br />
