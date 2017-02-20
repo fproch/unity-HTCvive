@@ -36,6 +36,13 @@ na krychli jsou navázány skripty:<br />
 
 <img src="https://raw.githubusercontent.com/octopusengine/unity-HTCvive/master/oeZERO16/images/zero16a.jpg" alt="zero16a.jpg" width="700">
 
+- <b>oeSrever</b><br />
+v testovací alfa verzi - pokus změny x,y,z (např. z mobilu)<br />
+pozice / souřadnice - se ukládají do souboru *.json<br />
+<br />
+<hr />
+
+
 
 
 
