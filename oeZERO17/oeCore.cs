@@ -6,14 +6,17 @@ using UnityEngine;
 // 0.19 (2017/01 firts public)
 // 0.20 (2017/02 Hackathon)
 // 0.30 (2017/03 Demo03 oeCore)
+// 0.40 (2017/03 tag oeSave)
 //---------------------------
-// todo - only Tag obj?
+// todo - better Tag obj?
 // test web-server - ZERO.json upload.. 
 
 public class oeCore : MonoBehaviour
 {
     //public GameObject[] oeBasicTag;
     public bool ListAllObjects = false;
+    public bool ListAllObjectsOe = false;
+    public int saveTime = 1000;
 
     GameObject goTag;
     int iObj = 0;
@@ -28,13 +31,16 @@ public class oeCore : MonoBehaviour
     string[] dataLines16; //
     string lineOfText;
 
-    // 2016:
-    string[] oeObjName = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "cubeYel1", "cubeYel2", "cubeYel2", "cubeYel4", "cubeYel5", "cubeYel6", "cubeYel7", "cubeYel8", "cubeYel9", "light1", "light2", "light3", "lightR", "lightG", "lightB" }; //board-foto/light/cube-wall-.../... 
-    GameObject[] oeObjSave; // 2017: oeObjSave.name = oeObjName
-    public GameObject goObj0;
-    public GameObject[] goObj;
-    int indexObj;
+    // 2016: ///= new string[255];// 
+    //string[] oeObjName = { "oeObjZERO" }; //board-foto/light/cube-wall-.../... 
+    List<GameObject> oeObjList = new List<GameObject>();
+    string[] oeObjName; // = new string[255]; 
+    // = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "cubeYel1", "cubeYel2", "cubeYel2", "cubeYel4", "cubeYel5", "cubeYel6", "cubeYel7", "cubeYel8", "cubeYel9", "light1", "light2", "light3", "lightR", "lightG", "lightB" }; //board-foto/light/cube-wall-.../... 
 
+    GameObject[] oeObjSave = new GameObject[255]; // 2017: oeObjSave.name = oeObjName
+    public GameObject goObj0;
+    public GameObject[] goObj = new GameObject[255]; //list.lenght?
+    int indexObj;
 
     public Transform originalValue;
     private LineRenderer line;
@@ -42,7 +48,6 @@ public class oeCore : MonoBehaviour
     private int lineWidth = 1;
     public Renderer rend1;
     TextMesh textObject0;
-    //public string dataFile = Application.dataPath+"/Resources/";
 
     //================================================================================================
     //start-inicializace
@@ -64,36 +69,68 @@ public class oeCore : MonoBehaviour
         oeObjSave = GameObject.FindGameObjectsWithTag("oeSave");
 
         indexObj = 0;
+        //https://msdn.microsoft.com/cs-cz/library/aa288453(v=vs.71).aspx
         foreach (GameObject goTag in oeObjSave)
         {
             //Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
-            Debug.Log("oeSave >>> " + goTag.name);
-            oeObjName[indexObj++] = goTag.name;
+            Debug.Log("oeSave > " + indexObj + " > " + goTag.name);
+            oeObjList.Add(goTag);
+            //oeObjName[indexObj++] = goTag.name;
+            //oeObjName[indexObj] = new string goTag.name;
+
+            //oeObjName[indexObj] = goTag.name;
+
             //goObj[indexObj] = goTag; //GameObject.Find(value);
             indexObj++;
         }
+        int numObj = indexObj; 
 
-        Debug.Log("----------------------oeCore17.Start(End)");
-        
+        Debug.Log("-------- LIST --------");
+        //goObj = new GameObject[oeObjName.Length];
+        //goObj = new GameObject[oeObjName.Length];
+        string[] oeObjName = new string[numObj];
+
+        indexObj = 0;
+
+        foreach (GameObject goItem in oeObjList)
+        {
+            //Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
+            Debug.Log("oeList >>> " + goItem.name);
+            //goObj[indexObj] = goItem;
+            oeObjName[indexObj] = goItem.name;
+            indexObj++;
+        }
+
+        if (ListAllObjectsOe)
+        {
+            string oeNameS = ":.TAG.:";
+            foreach (string oeName in oeObjName)
+            {
+                oeNameS += ", " + oeName;
+            }
+            Debug.Log("oeObjName >> " + oeNameS);
+        }
 
         //Scene scene = SceneManager.GetActiveScene();
         //scene.name; // name of scene
         string sName = Application.loadedLevelName;
         data17File = Application.dataPath + "/Resources/" + sName + ".json";
-        //Debug.Log(data16File);
 
+        Debug.Log("----------------------oeCore17.Start(End)");       
+
+       
+        //Debug.Log(data16File);        
+        
         goObj = new GameObject[oeObjName.Length];
-
+        
         indexObj = 0;
         foreach (string value in oeObjName)
         {
             goObj[indexObj] = GameObject.Find(value);
             indexObj++;
-        }
+        }        
 
-
-        dataLines16 = new string[255];
-
+        //dataLines16 = new string[255];
         goObj0 = GameObject.Find("oeObjZERO");
         textObject0 = GameObject.Find("text0").GetComponent<TextMesh>();
         rend1 = goObj0.GetComponent<Renderer>();
@@ -112,7 +149,7 @@ public class oeCore : MonoBehaviour
     void Update()
     {
         cntU++;
-        int kazdych = 3000;
+        int kazdych = saveTime;
 
         if (cntU % kazdych == 0)
         {
@@ -147,8 +184,9 @@ public class oeCore : MonoBehaviour
             obj.setPropertiesToGameObject(goObj[index]);
             index++;
         }
-    }
+    }   
 
+    //-----------------------------------------------
     private void oeSave()
     {
         oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
