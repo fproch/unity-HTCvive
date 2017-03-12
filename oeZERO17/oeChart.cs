@@ -39,7 +39,7 @@ public class oeChart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetLine();
+        //SetLine();
     }
 
     void SetLine()
@@ -56,12 +56,12 @@ public class oeChart : MonoBehaviour
             for (float x = 0; x < points; x++)
             {
 
-                lineRenderer2.SetPosition(xp, go1.transform.position + new Vector3(x / 2, Mathf.Sin(x / 2) + Mathf.Cos(r / 2), r));
+                lineRenderer.SetPosition(xp, go1.transform.position + new Vector3(x / 2, Mathf.Sin(x / 2) + Mathf.Cos(r / 2), r));
                 xp++;
             }
-            lineRenderer2.SetPosition(xp, go1.transform.position + new Vector3(points/2 ,0, r));
+            lineRenderer.SetPosition(xp, go1.transform.position + new Vector3(points/2 ,0, r));
             xp++;
-            lineRenderer2.SetPosition(xp, go1.transform.position + new Vector3(0, 0, 0));
+            lineRenderer.SetPosition(xp, go1.transform.position + new Vector3(0, 0, 0));
             xp++;
         }
 
