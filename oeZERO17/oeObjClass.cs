@@ -11,35 +11,38 @@ using UnityEngine;
 public class oeObjClass{
 
     public int index;
-    private string oName;
+    public string oN;
 	public Vector3 oT;
 	public Vector3 oR;
     //private int oValue;
     //private string oNote;
 
-    public oeObjClass(GameObject go, int index)
+    public oeObjClass(GameObject go, string oN, int index)
     {
         this.index = index;
-        oT = go.transform.position;
-        oR = go.transform.eulerAngles;
-        oName = go.name;
+        this.oT = go.transform.position;
+        this.oR = go.transform.eulerAngles;
+        this.oN = oN;
     }
 
     public void setPropertiesToGameObject(GameObject go)
     {
         go.transform.position = oT;
         go.transform.eulerAngles = oR;
-        //go.name = oName;
+        go.name = oN;
     }
 
     //===========================================================================
 	public Vector3 GetPos()             { return oT;}
     public void SetPos(Vector3 sP)      { oT=sP; }
 
-    public string GetName()             { return oName; }
-    public void SetName(string sN)      { oName = sN; }
+    public string GetName()             { return oN; }
+    public void SetName(string sN)      { oN = sN; }
 
 }
 	
 [System.Serializable]
 public struct oeObjWrapper{ public oeObjClass[] oeObjects; }
+
+[System.Serializable]
+public struct oeObjWrapperDict { public oeObjClass[] oeObjectsDict; }
