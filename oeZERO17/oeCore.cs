@@ -20,6 +20,7 @@ public class oeCore : MonoBehaviour
     public bool loadInfo = false;
     public bool saveInfo = false;
     public int saveTime = 1000;
+    public bool loadBackup = false;
 
     GameObject goTag;
     int iObj = 0;
@@ -30,6 +31,7 @@ public class oeCore : MonoBehaviour
     int cntLED;
     int cntU;
     public string data17File;
+    public string data17BakFile;
     public string data17FileDict;
     public string dataString;
     string[] dataLines16; //
@@ -122,6 +124,7 @@ public class oeCore : MonoBehaviour
         //scene.name; // name of scene
         string sName = Application.loadedLevelName;
         data17File = Application.dataPath + "/Resources/" + sName + ".json";
+        data17BakFile = Application.dataPath + "/Resources/" + sName + "-bak.json";
         data17FileDict = Application.dataPath + "/Resources/" + sName + "-d.json";
 
         Debug.Log("----------------------oeCore17.Start(End)");       
@@ -148,11 +151,10 @@ public class oeCore : MonoBehaviour
         Debug.Log("---------------- JSON-File2 " + jsonD);
         //textObject.text = json;
         */
-        oeLoad();
+        if (loadBackup) { oeLoad(data17BakFile); oeSave(); }
+        else oeLoad(data17File);
 
-        oeSaveTest();
-
-
+        if (saveTest) oeSaveTest();
     }
     //------------------------------------------------/start----------------------------------------
 
@@ -172,15 +174,15 @@ public class oeCore : MonoBehaviour
         if ((cntU - 100) % kazdych * 5 == 0)
         {
             rend1.material.color = Color.green;
-            oeLoad();
+            oeLoad(data17File);
         }
     }
     //------------------------------------------------------------------------------------------------
-
-    private void oeLoad()
+   
+    private void oeLoad(string loadFile)
     {
         //Debug.Log("loadData():");
-        var file = new System.IO.StreamReader(data17File, System.Text.Encoding.UTF8, true, 128);
+        var file = new System.IO.StreamReader(loadFile, System.Text.Encoding.UTF8, true, 128);
 
         dataString = file.ReadToEnd();
         file.Close();
@@ -203,9 +205,8 @@ public class oeCore : MonoBehaviour
 
     //-----------------------------------------------
     private void oeSaveTest()
-    {
-        if (saveTest)           
-        {
+    {                
+        
             Debug.Log("---------------------- save test------------------------");
             //oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
             int index = 0;
@@ -218,7 +219,7 @@ public class oeCore : MonoBehaviour
                 //oeObjArray[index] = new oeObjClass(go, go.name, index);
                 index++;
             }
-        }
+        
     }
 
 
