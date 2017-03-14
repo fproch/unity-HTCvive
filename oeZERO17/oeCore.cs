@@ -43,6 +43,7 @@ public class oeCore : MonoBehaviour
     string[] oeObjName; // = new string[255]; 
                         // = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "cubeYel1", "cubeYel2", "cubeYel2", "cubeYel4", "cubeYel5", "cubeYel6", "cubeYel7", "cubeYel8", "cubeYel9", "light1", "light2", "light3", "lightR", "lightG", "lightB" }; //board-foto/light/cube-wall-.../... 
     Dictionary<int, string> oeObjNameDict = new Dictionary<int, string>(); // index > name - ala asoc
+    Dictionary<string, int> oeObjIndexDict = new Dictionary<string,int>();
 
     GameObject[] oeObjSave; /// = new GameObject[255]; // 2017: oeObjSave.name = oeObjName
     public GameObject goObj0;
@@ -83,7 +84,8 @@ public class oeCore : MonoBehaviour
             Debug.Log("oeSave > " + indexObj + " > " + goTag.name);
             oeObjList.Add(goTag);
             oeObjNameDict.Add(indexObj, goTag.name);
-            
+            oeObjIndexDict.Add(goTag.name,indexObj);
+
             //oeObjName[indexObj++] = goTag.name;
             //oeObjName[indexObj] = new string goTag.name;
 
@@ -107,6 +109,7 @@ public class oeCore : MonoBehaviour
             ///Debug.Log("oeList >>> " + goItem.name);
             //goObj[indexObj] = goItem;
             oeObjName[indexObj] = goItem.name;
+            
             indexObj++;
         }
 
@@ -194,9 +197,10 @@ public class oeCore : MonoBehaviour
         int index = 0;
         foreach (var obj in wrapperLoad.oeObjects)
         {
-            if (loadInfo) Debug.Log("oeLoad " + index + " -> " + obj.oN);
+            int tempNewIndex = oeObjIndexDict[obj.oN];
+            if (loadInfo) Debug.Log("oeLoad " + index + " -> " + obj.oN + " iNew:"+ tempNewIndex);
             //obj.setPropertiesToGameObject(goObj[index]); //ok
-            obj.setPropertiesToGameObject(goObj[index]);
+            obj.setPropertiesToGameObject(goObj[tempNewIndex]); //index = old scene
             //oeObjNameDict[index]
 
             index++;
