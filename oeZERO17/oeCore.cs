@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// oeObjClass - octopusengine 
+//-----------------------------------------------------
+// oeObjClass - octopusengine.org 
+//-----------------------------------------------------
 // 0.19 (2017/01 firts public)
 // 0.20 (2017/02 Hackathon)
 // 0.30 (2017/03 Demo03 oeCore)
 // 0.40 (2017/03 tag oeSave)
+// 0.51 (2017/03 temp oeObjIndexDict)
 //---------------------------
 // todo - better Tag obj?
 // test web-server - ZERO.json upload.. 
@@ -30,11 +33,11 @@ public class oeCore : MonoBehaviour
     int cntBTC;
     int cntLED;
     int cntU;
-    public string data17File;
-    public string data17BakFile;
-    public string data17FileDict;
-    public string dataString;
-    string[] dataLines16; //
+    private string data17File;
+    private string data17BakFile;
+    private string data17FileDict;
+    private string dataString;
+    //string[] dataLines16; //
     string lineOfText;
 
     // 2016: ///= new string[255];// 
@@ -42,19 +45,19 @@ public class oeCore : MonoBehaviour
     List<GameObject> oeObjList = new List<GameObject>();
     string[] oeObjName; // = new string[255]; 
                         // = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "cubeYel1", "cubeYel2", "cubeYel2", "cubeYel4", "cubeYel5", "cubeYel6", "cubeYel7", "cubeYel8", "cubeYel9", "light1", "light2", "light3", "lightR", "lightG", "lightB" }; //board-foto/light/cube-wall-.../... 
-    Dictionary<int, string> oeObjNameDict = new Dictionary<int, string>(); // index > name - ala asoc
-    Dictionary<string, int> oeObjIndexDict = new Dictionary<string,int>();
+    //rebuild index: file > scene
+    Dictionary<int, string> oeObjNameDict = new Dictionary<int, string>(); //from seved file - index > name - ala asoc
+    Dictionary<string, int> oeObjIndexDict = new Dictionary<string,int>(); //from scene - name > index - ala asoc
 
     GameObject[] oeObjSave; /// = new GameObject[255]; // 2017: oeObjSave.name = oeObjName
-    public GameObject goObj0;
-    public GameObject[] goObj;// = new GameObject[255]; //list.lenght?
+    private GameObject goObj0;
+    private GameObject[] goObj;// = new GameObject[255]; //list.lenght?
     int indexObj;
-
-    public Transform originalValue;
+    //public Transform originalValue;
     private LineRenderer line;
     private Color lineColor = Color.red;
     private int lineWidth = 1;
-    public Renderer rend1;
+    private Renderer rend1;
     TextMesh textObject0;
 
     //================================================================================================
@@ -81,7 +84,7 @@ public class oeCore : MonoBehaviour
         foreach (GameObject goTag in oeObjSave)
         {
             //Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
-            Debug.Log("oeSave > " + indexObj + " > " + goTag.name);
+            if (ListAllObjectsOe) Debug.Log("oeSave > " + indexObj + " > " + goTag.name);
             oeObjList.Add(goTag);
             oeObjNameDict.Add(indexObj, goTag.name);
             oeObjIndexDict.Add(goTag.name,indexObj);
@@ -161,20 +164,20 @@ public class oeCore : MonoBehaviour
     }
     //------------------------------------------------/start----------------------------------------
 
-    //timer cca60 FPS
+    //pseudo timer cca60 FPS
     void Update()
     {
         cntU++;
-        int kazdych = saveTime;
+        int everyMilisec = saveTime;
 
-        if (cntU % kazdych == 0)
+        if (cntU % everyMilisec == 0)
         {
             rend1.material.color = Color.red;
             oeSave();
             ///oeSaveDict();
         }
 
-        if ((cntU - 100) % kazdych * 5 == 0)
+        if ((cntU - 100) % everyMilisec * 5 == 0)
         {
             rend1.material.color = Color.green;
             oeLoad(data17File);
@@ -186,11 +189,9 @@ public class oeCore : MonoBehaviour
     {
         //Debug.Log("loadData():");
         var file = new System.IO.StreamReader(loadFile, System.Text.Encoding.UTF8, true, 128);
-
         dataString = file.ReadToEnd();
         file.Close();
-
-        //Debug.Log("dataString: " + dataString);
+      
         oeObjWrapper wrapperLoad = JsonUtility.FromJson<oeObjWrapper>(dataString);
         //Debug.Log("wrapper, fst object: " + wrapperLoad.oeObjects[0].oT);
 
@@ -209,8 +210,7 @@ public class oeCore : MonoBehaviour
 
     //-----------------------------------------------
     private void oeSaveTest()
-    {                
-        
+    { 
             Debug.Log("---------------------- save test------------------------");
             //oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
             int index = 0;
@@ -219,17 +219,13 @@ public class oeCore : MonoBehaviour
                 //Debug.Log("save: " + index + " > " + go.name); //go nemá name? err
                 //Debug.Log("save: " + index + " > " + goName.name);
                 Debug.Log("save: " + index + " > " + oeObjNameDict[index]);
-
                 //oeObjArray[index] = new oeObjClass(go, go.name, index);
                 index++;
-            }
-        
+            }        
     }
-
-
+    
     private void oeSave()
-    {
-        //Debug.Log("---------------------- save ------------------------");
+    {        
         oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
         int index = 0;
         foreach (var go in goObj)
@@ -263,7 +259,5 @@ public class oeCore : MonoBehaviour
 
         ///Debug.Log(data16File);
         System.IO.File.WriteAllText(data17FileDict, json);
-    }   
-
-
+    }  
 }
