@@ -6,6 +6,7 @@ public class oeLightSelect : MonoBehaviour
 {
 
     GameObject goCudl1;
+    GameObject oeAudio0;
     GameObject oeAudio1;
     GameObject oeAudio2;
     GameObject oeBezier;
@@ -29,12 +30,14 @@ public class oeLightSelect : MonoBehaviour
         //Debug.Log(mat1);
         //oeLightA = GameObject.Find("SpotlightA").GetComponent<Light>(); //oeLight1
         oeLight1 = GameObject.Find("oeLight1").GetComponent<Light>();
+        oeAudio0 = GameObject.Find("oeAudio0");
         oeAudio1 = GameObject.Find("oeAudio1");
         oeAudio2 = GameObject.Find("oeAudio2");
         //oeBezier = GameObject.Find("oeBezier");
         //oeWall1 = GameObject.Find("oeWall1");
         //Octopus1 = GameObject.Find("Octopus1");
 
+        oeAudio0.active = false;
         oeAudio2.active = false;
         //oeBezier.active = false;
 
@@ -71,9 +74,12 @@ public class oeLightSelect : MonoBehaviour
         {
             //oeLightA.enabled = true; oeLight1.enabled = true;
             //Octopus1.active = true;
-            Material newMat = Resources.Load("SkyboxFire", typeof(Material)) as Material;
+            Material newMat = Resources.Load("OverCast2Sky", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
-            oeLight1.enabled = false;
+            oeLight1.enabled = true;
+            oeAudio1.active = true;
+            oeAudio0.active = false;
+            oeAudio2.active = false;
 
         }
         if (selObj == "sel2") //ora
@@ -88,8 +94,9 @@ public class oeLightSelect : MonoBehaviour
             //RenderSettings.skybox = levelMat;
             Material newMat = Resources.Load("SkyboxFire", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
-            oeLight1.enabled = true;
-            oeAudio1.active = true;
+            //oeLight1.enabled = true;
+            oeAudio0.active = true;
+            oeAudio1.active = false;
             oeAudio2.active = false;
             //oeBezier.active = false;
 
@@ -102,6 +109,7 @@ public class oeLightSelect : MonoBehaviour
             Material newMat = Resources.Load("SkyMorning", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeLight1.enabled = true;
+            oeAudio0.active = false;
             oeAudio1.active = false;
             oeAudio2.active = true;
             
@@ -114,6 +122,7 @@ public class oeLightSelect : MonoBehaviour
             Material newMat = Resources.Load("PurpleNebula", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             //oeBezier.active = true;
+            oeAudio0.active = false;
             oeAudio1.active = true;
             oeAudio2.active = false;
         }
@@ -125,6 +134,7 @@ public class oeLightSelect : MonoBehaviour
             RenderSettings.skybox = newMat;
             //oeLightA.enabled = false;
             oeLight1.enabled = false;
+            oeAudio0.active = false;
             oeAudio1.active = false;
             oeAudio2.active = false;
             //Octopus1.active = false; }

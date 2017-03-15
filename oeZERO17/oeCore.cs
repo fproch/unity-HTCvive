@@ -22,6 +22,9 @@ public class oeCore : MonoBehaviour
     public bool saveTest = false;
     public bool loadInfo = false;
     public bool saveInfo = false;
+    public bool testDigitCnt = false;
+    oePlugCubeDigit9 testDigi;
+
     public int saveTime = 1000;
     public bool loadBackup = false;
 
@@ -74,6 +77,12 @@ public class oeCore : MonoBehaviour
                 Debug.Log(iObj + " > " + go.ToString());
                 iObj++;
             }
+
+            if (testDigitCnt) { 
+            //oePlugCubeDigit9 testDigi = new oePlugCubeDigit9();
+            //testDigi.numOnDisplay = 111;
+            }
+
         }
 
         Debug.Log("-------- TAG -------- list and dict:"); //https://docs.unity3d.com/ScriptReference/GameObject.FindGameObjectsWithTag.html
