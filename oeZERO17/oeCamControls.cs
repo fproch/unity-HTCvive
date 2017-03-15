@@ -4,17 +4,38 @@ using UnityEngine;
 
 public class oeCamControls : MonoBehaviour
 {
-    float rotSpeed = 1.0f; // Rotation speed modifier
-    float movSpeed = 50.0f; // Movement speed modifier
-    bool revertX = false;
-    bool revertY = false;
-    float distance;
+
+    public float rotSpeed, movSpeed;
+    private bool revertX, revertY;
+    private float distance;
     public Transform target;
+
+    // ------------------------------------------twoCams-------------------------------------
+    // ------------------------------------------version-------------------------------------
+    /*
+    private GameObject firstPersonCam, thirdPersonCam;
 
     // Use this for initialization
     void Start()
     {
-        transform.LookAt(target);
+        revertX = false;
+        revertY = false;
+
+        firstPersonCam = new GameObject("1stPersonCamera", typeof(Camera));
+        firstPersonCam.transform.parent = target.transform;
+        firstPersonCam.GetComponent<Camera>().targetDisplay = 1;
+
+        firstPersonCam.transform.position = target.position;
+        firstPersonCam.transform.rotation = target.rotation * Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
+        thirdPersonCam = Instantiate(firstPersonCam, target.transform);
+        thirdPersonCam.transform.name = "3rdPersonCamera";
+        thirdPersonCam.transform.Translate(target.up * 0.7f + target.forward * -1.0f);
+        thirdPersonCam.transform.LookAt(target);
+
+        firstPersonCam.SetActive(false);
+        firstPersonCam.AddComponent<oeCameraText>(); //add oeCameraText script as a component
+        thirdPersonCam.AddComponent<oeCameraText>(); //and to the 3P camera too, ofc
     }
 
     // Update is called once per frame
@@ -22,33 +43,46 @@ public class oeCamControls : MonoBehaviour
     {
         // rotation
 
-        if (Input.GetKey(KeyCode.LeftControl)) // "Look over the shoulder" movement
+        if (Input.GetKey(KeyCode.Mouse0) && thirdPersonCam.activeInHierarchy) // Third person cam - "Look over the shoulder" movement
         {
-            transform.Translate(new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * Time.deltaTime * rotSpeed);
+            thirdPersonCam.transform.Translate(new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * Time.deltaTime * rotSpeed);
         }
 
-        if (Input.GetKey(KeyCode.LeftAlt)) // Rotation around object
+        if (Input.GetKey(KeyCode.Mouse1))
         {
-            distance = Vector3.Distance(target.position, transform.position);
-            transform.Translate(new Vector3(Input.GetAxis("Mouse X") * (revertX ? 1.0f : -1.0f), // If reverse horizontal, multiply by -1
-                                            Input.GetAxis("Mouse Y") * (revertY ? 1.0f : -1.0f), // If reverse vertical, multiply by -1
-                                            0.0f) * Time.deltaTime * movSpeed);
+            if (thirdPersonCam.activeInHierarchy) // Third person cam - Rotation around object
+            {
+                distance = Vector3.Distance(target.position, thirdPersonCam.transform.position);
+                thirdPersonCam.transform.Translate(new Vector3(Input.GetAxis("Mouse X") * (revertX ? 1.0f : -1.0f), // If reverse horizontal, multiply by -1
+                                                Input.GetAxis("Mouse Y") * (revertY ? 1.0f : -1.0f), // If reverse vertical, multiply by -1
+                                                0.0f) * Time.deltaTime * movSpeed);
 
-            transform.LookAt(target);
-            transform.Translate(Vector3.forward * (Vector3.Distance(target.position, transform.position) - distance)); //Movement slightly towards the object to negate the offset of sideways motion
+                thirdPersonCam.transform.LookAt(target);
+                thirdPersonCam.transform.Translate(Vector3.forward * (Vector3.Distance(target.position, thirdPersonCam.transform.position) - distance)); //Movement slightly towards the object to negate the offset of sideways motion
+            }
+            else // !! rotary movement of mouse causes view to roll around objects Z-axis !! 
+                firstPersonCam.transform.Rotate(new Vector3(Input.GetAxis("Mouse Y") * (revertY ? 1.0f : -1.0f), // If reverse vertical, multiply by -1
+                                                        Input.GetAxis("Mouse X") * (revertX ? -1.0f : 1.0f), // If reverse horizontal, multiply by -1
+                                                        0.0f) * Time.deltaTime * movSpeed);
+
         }
 
-        if (Input.GetKey(KeyCode.LeftShift)) // Zooming in and out
-        {
-            transform.Translate(Vector3.forward * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * movSpeed);
-        }
+        //  Third person cam - zooming in/out
+        if (thirdPersonCam.activeInHierarchy)
+            thirdPersonCam.transform.Translate(Vector3.forward * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * movSpeed);
 
         if (Input.GetKey(KeyCode.Tab))
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, target.rotation, Time.deltaTime * rotSpeed);
-            // rotSpeed instead of movSpeed so that the movement would correspond with rotation on the way back
-            transform.position = Vector3.Slerp(transform.position, target.position, Time.deltaTime * rotSpeed);
-            transform.LookAt(target);
+        { //Reverse back to "default" position
+            if (thirdPersonCam.activeInHierarchy)
+            {
+                thirdPersonCam.transform.rotation = Quaternion.Slerp(thirdPersonCam.transform.rotation, target.rotation * Quaternion.Euler(35.0f, 0.0f, 0.0f), Time.deltaTime * rotSpeed);
+                // rotSpeed instead of movSpeed so that the movement would correspond with rotation speed on the way back
+                thirdPersonCam.transform.position = Vector3.Slerp(thirdPersonCam.transform.position, target.position + target.up * 0.7f + target.forward * -1.0f, Time.deltaTime * rotSpeed);
+                thirdPersonCam.transform.LookAt(target);
+            }
+            else
+                firstPersonCam.transform.rotation = Quaternion.Slerp(firstPersonCam.transform.rotation, target.rotation, Time.deltaTime * rotSpeed);
+
         }
 
         //misc
@@ -63,5 +97,143 @@ public class oeCamControls : MonoBehaviour
             revertY = !revertY;
         }
 
+        if (Input.GetKeyDown(KeyCode.C)) // Invert Y axis movement
+        {
+            if (thirdPersonCam.activeInHierarchy)
+            {
+                thirdPersonCam.transform.position = target.position + target.up * 0.7f + target.forward * -1.0f;
+                thirdPersonCam.transform.rotation = target.rotation * Quaternion.Euler(35.0f, 0.0f, 0.0f);
+                thirdPersonCam.transform.LookAt(target);
+            }
+            else
+                firstPersonCam.transform.rotation = target.rotation;
+
+            thirdPersonCam.SetActive(firstPersonCam.activeInHierarchy);
+            firstPersonCam.SetActive(!firstPersonCam.activeInHierarchy);
+        }
+    }    
+    */
+
+    // ------------------------------------------oneCam--------------------------------------
+    // ------------------------------------------version-------------------------------------
+    //*
+
+    public float shiftPrecision = 0.05f;
+    private bool cam1P, shiftView;
+    private GameObject followCam;
+
+    // Use this for initialization
+    void Start()
+    {
+        revertX = false;
+        revertY = false;
+        cam1P = false; //reminder of whether the cam is in 1st person view
+        shiftView = false;
+
+        followCam = new GameObject("FollowCamera", typeof(Camera));
+        followCam.transform.parent = target.transform;
+        followCam.GetComponent<Camera>().targetDisplay = 1;
+
+        followCam.transform.position = target.position + target.up * 0.7f + target.forward * -1.0f;
+        followCam.transform.rotation = target.rotation * Quaternion.Euler(35.0f, 0.0f, 0.0f);
+        //followCam.transform.rotation = target.transform.rotation * Quaternion.Euler(35.0f, 180.0f, 0.0f);  -původně kvuli pohybu kostky dozadu místo dopředu a vice versa
+
+        followCam.AddComponent<oeCameraText>(); //add oeCameraText script as a component
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // rotation
+
+        if (Input.GetKey(KeyCode.Mouse0) && !cam1P && !shiftView) // Third person cam - "Look over the shoulder" movement
+        {
+            followCam.transform.Translate(new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * Time.deltaTime * rotSpeed);
+        }
+
+        if (Input.GetKey(KeyCode.Mouse1) && !shiftView)
+        {
+            /* remnants of motion being available while shifting views
+            if (shiftView)
+            { //if View is being shifted, this is to make sure you don't end up in 1stPC controls in 3rdPC view
+                shiftView = false;
+
+                if (cam1P)
+                    cam1P = false;
+            }
+            */
+
+            if (cam1P) //First person cam - Looking around
+                followCam.transform.Rotate(new Vector3(Input.GetAxis("Mouse Y") * (revertY ? 1.0f : -1.0f), // If reverse vertical, multiply by -1
+                                                    Input.GetAxis("Mouse X") * (revertX ? -1.0f : 1.0f), // If reverse horizontal, multiply by -1
+                                                    0.0f) * Time.deltaTime * movSpeed);
+
+            else // Third person cam - Rotation around object
+            {
+                distance = Vector3.Distance(target.position, followCam.transform.position);
+                followCam.transform.Translate(new Vector3(Input.GetAxis("Mouse X") * (revertX ? 1.0f : -1.0f), // If reverse horizontal, multiply by -1
+                                                Input.GetAxis("Mouse Y") * (revertY ? 1.0f : -1.0f), // If reverse vertical, multiply by -1
+                                                0.0f) * Time.deltaTime * movSpeed);
+
+                followCam.transform.LookAt(target);
+                followCam.transform.Translate(Vector3.forward * (Vector3.Distance(target.position, followCam.transform.position) - distance)); //Movement slightly towards the object to negate the offset of sideways motion
+            }
+        }
+
+        //  Third person cam - zooming in/out
+        if (!cam1P && !shiftView)
+            followCam.transform.Translate(Vector3.forward * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * movSpeed);
+
+        if (Input.GetKey(KeyCode.Tab) && !shiftView)
+        { //Center camera back to "default" position
+            if (!cam1P)//if in 3rd person, initiate the if(shiftview)
+                shiftView = true;
+            else
+                followCam.transform.rotation = Quaternion.Slerp(followCam.transform.rotation, target.rotation, Time.deltaTime * rotSpeed);
+        }
+
+        //misc
+        //note to self: unlike GetKey(), GetKeyDown() doesn't repeat in update until button re-press
+
+        if (Input.GetKeyDown(KeyCode.X)) // Invert X axis movement
+        {
+            revertX = !revertX;
+        }
+        if (Input.GetKeyDown(KeyCode.Y)) // Invert Y axis movement
+        {
+            revertY = !revertY;
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) // Invert Y axis movement
+        {
+            cam1P = !cam1P;
+            shiftView = true;
+        }
+
+        if (shiftView) // "cinematic" shift between 1st person and 3rd person camera; initiated by other means
+        {
+            if (cam1P)
+            {
+                if (Vector3.Distance(followCam.transform.position, target.transform.position) > shiftPrecision)
+                {
+                    followCam.transform.position = Vector3.Slerp(followCam.transform.position, target.position, Time.deltaTime * rotSpeed);
+                    followCam.transform.rotation = Quaternion.Slerp(followCam.transform.rotation, target.rotation, Time.deltaTime * rotSpeed);
+                }
+                else
+                    shiftView = false;
+            }
+            else
+            {
+                if (Vector3.Distance(followCam.transform.position, target.position + target.up * 0.7f + target.forward * -1.0f) > shiftPrecision)
+                { //shifts the position and rotation continually until it reaches near equal position
+                    followCam.transform.rotation = Quaternion.Slerp(followCam.transform.rotation, target.rotation * Quaternion.Euler(35.0f, 0.0f, 0.0f), Time.deltaTime * rotSpeed);
+                    followCam.transform.position = Vector3.Slerp(followCam.transform.position, target.position + target.up * 0.7f + target.forward * -1.0f, Time.deltaTime * rotSpeed);
+                }
+                else
+                    shiftView = false;
+            }
+
+        }
+    }
+//*/
 }
