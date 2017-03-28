@@ -5,7 +5,11 @@ using UnityEngine;
 public class oePlugCubeDigit9 : MonoBehaviour
 {
     public string nameObj = "oeCD3";
-    public int digits = 3; 
+    public int myIndex = 0;
+    public int digits = 3;
+    public bool testSliceY = false;
+    public bool testSliceX = false;
+    public bool testBTC = false;
     private int horizontal = 5;
     private int vertical = 9;
     //public int size = 1;
@@ -20,7 +24,9 @@ public class oePlugCubeDigit9 : MonoBehaviour
     private Renderer rend1;
     private Vector3 positionP;
     private GameObject[,,] goD = new GameObject[7, 5, 9]; //digits > 5x8
-    
+    //public oeCommonDataContainer[] myCommonDataContainer = new oeCommonDataContainer[];
+    //public oeCommonDataContainer[] myCommonDataContainer;
+    //public oeCommonDataContainer myCommonDataContainer;
 
     private bool[,] numDigit = new bool[,] {
         { true, true, true, true, true, true, false },  //0
@@ -41,6 +47,7 @@ public class oePlugCubeDigit9 : MonoBehaviour
         Debug.Log("oePlugCubeDigit3");
         //oeNumBuff pom
         //startTrans.position = startTrans.position + new Vector3(10, 1, 0); // Vector3.zero;
+        if (testBTC) StartCoroutine(BTC());
         createCubePoints();
     }
 
@@ -48,10 +55,13 @@ public class oePlugCubeDigit9 : MonoBehaviour
     void Update()
     {
         cntU++;
+
+        if (cntU % 1000 == 0) { if (testBTC) StartCoroutine(BTC()); }
+
         if (cntU > 10000) cntU = 0;
         //int i = 0; int j = 0;
         //GameObject go = GameObject.Find(nameObj + j + "." + i); //?i obj reference     
-        if (cntU % 100 == 0)
+        if (cntU % 200 == 0) //100
         {
             //var randomN = Random.Range(-1, 9);
             //var randomD = Random.Range(0, 2);
@@ -64,35 +74,71 @@ public class oePlugCubeDigit9 : MonoBehaviour
              drawNum(0, randomN);
             }
 
-            if (digits == 3)
+            if ((digits == 2) || (digits == 3))
             {
+                //var randomN = Random.Range(0, 9);
+                //drawNum(0, randomN);
+
+
+
                 int n100 = 0;
                 int n10 = 0;
                 int n1 = 0;
 
-                numOnDisplay = (int)cntU / 100;
-                //if (numOnDisplay > 999) cntU = 0;
+                if (testSliceY)
+                {
+                    numOnDisplay = (int)(startTrans.position.y * 30);
+                    //myCommonDataContainer[myIndex] = numOnDisplay;
+                    oeCommonDataContainer.setArrInt(myIndex, numOnDisplay);
+                }
+                else numOnDisplay = (int)cntU / 100;
+                //numOnDisplay = 78;
 
-                if (numOnDisplay < 10)  {  n1 = numOnDisplay;  }
+                if (numOnDisplay < 10) { n1 = numOnDisplay; }
                 if (numOnDisplay < 100 && numOnDisplay > 9)
                 {
-                    n10 = (int)(numOnDisplay/ 10);
-                    n1 = numOnDisplay - n10*10;
+                    n10 = (int)(numOnDisplay / 10);
+                    n1 = numOnDisplay - n10 * 10;
                 }
 
                 if (numOnDisplay < 1000 && numOnDisplay > 99)
                 {
                     n100 = (int)(numOnDisplay / 100);
-                    n10 = (int)((numOnDisplay-n100*100)/10);
-                    n1 = numOnDisplay - n100*100 - n10*10;
-                }                
+                    n10 = (int)((numOnDisplay - n100 * 100) / 10);
+                    n1 = numOnDisplay - n100 * 100 - n10 * 10;
+                }
 
                 drawNum(0, n1);
                 drawNum(1, n10);
-                drawNum(2, n100);                
+                drawNum(2, n100);
+
             }
 
-                if (digits == 7)
+           
+
+
+            if (digits == 5)
+            {
+                int n1000 = 0;
+                int n100 = 0;
+                int n10 = 0;
+                int n1 = 0;
+
+                //numOnDisplay = (int)cntU / 100;
+                //if (numOnDisplay > 999) cntU = 0;
+
+                n1000 = (int)(numOnDisplay / 1000);
+                n100 = (int)((numOnDisplay-n1000*1000) / 100);
+                n10 = (int)((numOnDisplay - n1000*1000 -n100 * 100) / 10);
+                n1 = numOnDisplay - n1000*1000 - n100 * 100 - n10 * 10;
+
+                drawNum(0, n1);
+                drawNum(1, n10);
+                drawNum(2, n100);
+                drawNum(3, n1000);
+            }
+
+            if (digits == 7)
             {
                 drawNum(0, 1);
                 drawNum(1, 2);
@@ -160,15 +206,15 @@ public class oePlugCubeDigit9 : MonoBehaviour
 
         for (int d = 0; d < digits; d++)
         {
-            Debug.Log("---digit: "+d);
+            //Debug.Log("---digit: "+d);
             for (int j = 0; j < vertical; j++)
             {
                 deltaY = j * scale * 1.1f;
                 for (int i = 0; i < horizontal; i++)
                 {
                     deltaX = i * scale * 1.1f;
-                    positionP.x = startTrans.position.x + deltaX + scale * 7 * d + scale * 2 + 0.1f;
-                    positionP.y = startTrans.position.y + deltaY;
+                    positionP.x = startTrans.position.x + deltaX + scale * 7 * d + scale * 0.5f + 0.1f;
+                    positionP.y = startTrans.position.y + deltaY - scale * 2f;
                     //GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     goD[d, i, j] = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     goD[d, i, j].name = nameObj + d+"."+j + "." + i;
@@ -197,4 +243,32 @@ public class oePlugCubeDigit9 : MonoBehaviour
             //position0.y = 0;
         }
     }
+
+
+    private IEnumerator BTC()
+    {
+        Debug.Log(">BTC");
+        WWW wBTC = new WWW("https://www.bitstamp.net/api/ticker");
+        yield return wBTC;
+        //toRet = "NIC";
+        if (wBTC.error != null)
+        {
+            Debug.Log("Error BTC.. " + wBTC.error);
+            // for example, often 'Error .. 404 Not Found'
+        }
+        else
+        {
+            //Debug.Log("Found BTC... ==>" + wBTC.text + "<==");
+        }
+        var jsonBTC = wBTC.text;
+        int poziceKurzu = jsonBTC.IndexOf("last");
+        //Debug.Log(poziceKurzu);
+        float kurzBTC = float.Parse(jsonBTC.Substring(poziceKurzu + 8, 5));
+        Debug.Log(kurzBTC);
+        numOnDisplay = (int)kurzBTC;
+    }
+
+
+
+
 }
