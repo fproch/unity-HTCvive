@@ -210,7 +210,7 @@ public class oeCore : MonoBehaviour
             int tempNewIndex = oeObjIndexDict[obj.oN];
             if (loadInfo) Debug.Log("oeLoad " + index + " -> " + obj.oN + " iNew:"+ tempNewIndex);
             //obj.setPropertiesToGameObject(goObj[index]); //ok
-            obj.setPropertiesToGameObject(goObj[tempNewIndex]); //index = old scene
+			obj.setPropertiesToGameObject(GameObject.Find(obj.oN)); //index = old scene
             //oeObjNameDict[index]
 
             index++;
@@ -234,13 +234,16 @@ public class oeCore : MonoBehaviour
     }
     
     private void oeSave()
-    {        
+    {
+		if (!goDuplicatesCheck) {
+			return;
+		}
+
         oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
         int index = 0;
         foreach (var go in goObj)
         {
-            if (saveInfo) Debug.Log("oeSave: " + index + " > " + oeObjNameDict[index]); //Debug.Log("save: " + index + " > " + oeObjName[index]);
-            oeObjArray[index] = new oeObjClass(go, oeObjNameDict[index], index);
+            oeObjArray[index] = new oeObjClass(go);
             index++;
         }
         oeObjWrapper wrapperSave = new oeObjWrapper();
@@ -258,7 +261,7 @@ public class oeCore : MonoBehaviour
         {
             //oeObjArray[index] = new oeObjClass(go, index);
             index++;
-            oeObjDict.Add(go.name, new oeObjClass(go, go.name, index));
+			oeObjDict.Add(go.name, new oeObjClass(go));
         }
 
         oeObjWrapperDict wrapperSaveDict = new oeObjWrapperDict();
@@ -268,5 +271,19 @@ public class oeCore : MonoBehaviour
 
         ///Debug.Log(data16File);
         System.IO.File.WriteAllText(data17FileDict, json);
-    }  
+    }
+
+	private bool goDuplicatesCheck() {
+		GameObject[] objectsToSave = GameObject.FindGameObjectsWithTag("oeSave");
+		List<string> names = new List<string>();
+
+		foreach (var o in objectsToSave) {
+			if (names.Contains(o.name)) {
+				return false;
+			}
+			names.Add (o.name);
+		}
+
+		return true;
+	}
 }
