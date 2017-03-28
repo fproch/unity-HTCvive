@@ -17,6 +17,7 @@ public class oeObjClass{
     //private int oValue;
     //private string oNote;
 
+	// Deprecated - don't use index
     public oeObjClass(GameObject go, string oN, int index)
     {
         this.index = index;
@@ -25,11 +26,20 @@ public class oeObjClass{
         this.oN = oN;
     }
 
+	public oeObjClass(GameObject go)
+	{
+		this.oT = go.transform.position;
+		this.oR = go.transform.eulerAngles;
+		this.oN = go.name;		
+	}
+
     public void setPropertiesToGameObject(GameObject go)
     {
-        go.transform.position = oT;
-        go.transform.eulerAngles = oR;
-        go.name = oN;
+		if (go != null) {
+			go.transform.position = oT;
+			go.transform.eulerAngles = oR;
+			go.name = oN;	
+		}
     }
 
     //===========================================================================
