@@ -10,7 +10,7 @@ using UnityEngine;
 [System.Serializable]
 public class oeObjClass{
 
-    public int index;
+    public int i;
     public string oN;
 	public Vector3 oT;
 	public Vector3 oR;
@@ -18,17 +18,17 @@ public class oeObjClass{
     //private string oNote;
 
 	// Deprecated - don't use index
-    public oeObjClass(GameObject go, string oN, int index)
+    public oeObjClass(GameObject go, string oN, int gi)
     {
-        this.index = index;
-        this.oT = go.transform.position;
+        this.i = gi;
+        this.oT = new Vector3(oeRound(go.transform.position.x), oeRound(go.transform.position.y), oeRound(go.transform.position.z)); // go.transform.position;
         this.oR = go.transform.eulerAngles;
         this.oN = oN;
     }
 
 	public oeObjClass(GameObject go)
 	{
-		this.oT = go.transform.position;
+		this.oT = new Vector3 (oeRound(go.transform.position.x), oeRound(go.transform.position.y), oeRound(go.transform.position.z));
 		this.oR = go.transform.eulerAngles;
 		this.oN = go.name;		
 	}
@@ -42,15 +42,23 @@ public class oeObjClass{
 		}
     }
 
+    public float oeRound(float fNum)
+    {
+        return (Mathf.Round(fNum * 1000) / 1000); //.ToString();
+    }
+
     //===========================================================================
-	public Vector3 GetPos()             { return oT;}
+    public Vector3 GetPos()             { return oT;}
     public void SetPos(Vector3 sP)      { oT=sP; }
 
     public string GetName()             { return oN; }
     public void SetName(string sN)      { oN = sN; }
 
 }
-	
+
+
+
+
 [System.Serializable]
 public struct oeObjWrapper{ public oeObjClass[] oeObjects; }
 

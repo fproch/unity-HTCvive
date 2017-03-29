@@ -10,8 +10,8 @@ using UnityEngine;
 // 0.30 (2017/03 Demo03 oeCore)
 // 0.40 (2017/03 tag oeSave)
 // 0.51 (2017/03 temp oeObjIndexDict)
+// 0.52 (2017/03 goDuplicatesCheck)
 //---------------------------
-// todo - better Tag obj?
 // test web-server - ZERO.json upload.. 
 
 public class oeCore : MonoBehaviour
@@ -47,10 +47,12 @@ public class oeCore : MonoBehaviour
     //string[] oeObjName = { "oeObjZERO" }; //board-foto/light/cube-wall-.../... 
     List<GameObject> oeObjList = new List<GameObject>();
     string[] oeObjName; // = new string[255]; 
-                        // = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "cubeYel1", "cubeYel2", "cubeYel2", "cubeYel4", "cubeYel5", "cubeYel6", "cubeYel7", "cubeYel8", "cubeYel9", "light1", "light2", "light3", "lightR", "lightG", "lightB" }; //board-foto/light/cube-wall-.../... 
+                        // = { "oeObjZERO", "oeObjINFO1", "oeObjINFO2", "obj2", "obj3", "obj4.....  "light1", "light2", "light3", "lightR", "lightG", "lightB" }; 
+                        // board-foto/light/cube-wall-.../... 
+    
     //rebuild index: file > scene
-    Dictionary<int, string> oeObjNameDict = new Dictionary<int, string>(); //from seved file - index > name - ala asoc
-    Dictionary<string, int> oeObjIndexDict = new Dictionary<string,int>(); //from scene - name > index - ala asoc
+    Dictionary<int, string> oeObjNameDict = new Dictionary<int, string>(); //from seved file - index > name 
+    Dictionary<string, int> oeObjIndexDict = new Dictionary<string,int>(); //from scene - name > index 
 
     GameObject[] oeObjSave; /// = new GameObject[255]; // 2017: oeObjSave.name = oeObjName
     private GameObject goObj0;
@@ -76,13 +78,7 @@ public class oeCore : MonoBehaviour
             {
                 Debug.Log(iObj + " > " + go.ToString());
                 iObj++;
-            }
-
-            if (testDigitCnt) { 
-            //oePlugCubeDigit9 testDigi = new oePlugCubeDigit9();
-            //testDigi.numOnDisplay = 111;
-            }
-
+            }   
         }
 
         Debug.Log("-------- TAG -------- list and dict:"); //https://docs.unity3d.com/ScriptReference/GameObject.FindGameObjectsWithTag.html
@@ -100,16 +96,12 @@ public class oeCore : MonoBehaviour
 
             //oeObjName[indexObj++] = goTag.name;
             //oeObjName[indexObj] = new string goTag.name;
-
-            //oeObjName[indexObj] = goTag.name;
-
             //goObj[indexObj] = goTag; //GameObject.Find(value);
             indexObj++;
         }
         int numObj = indexObj; 
 
         Debug.Log("-------- LIST --------");
-        //goObj = new GameObject[oeObjName.Length];
         //goObj = new GameObject[oeObjName.Length];
         string[] oeObjName = new string[numObj];
 
@@ -118,10 +110,8 @@ public class oeCore : MonoBehaviour
         foreach (GameObject goItem in oeObjList)
         {
             //Instantiate(respawnPrefab, respawn.transform.position, respawn.transform.rotation);
-            ///Debug.Log("oeList >>> " + goItem.name);
             //goObj[indexObj] = goItem;
-            oeObjName[indexObj] = goItem.name;
-            
+            oeObjName[indexObj] = goItem.name;            
             indexObj++;
         }
 
@@ -142,11 +132,7 @@ public class oeCore : MonoBehaviour
         data17BakFile = Application.dataPath + "/Resources/" + sName + "-bak.json";
         data17FileDict = Application.dataPath + "/Resources/" + sName + "-d.json";
 
-        Debug.Log("----------------------oeCore17.Start(End)");       
-
-       
-        //Debug.Log(data16File);        
-        
+        Debug.Log("----------------------oeCore17.Start(End)");    
         goObj = new GameObject[oeObjName.Length];
         
         indexObj = 0;
@@ -154,9 +140,8 @@ public class oeCore : MonoBehaviour
         {
             goObj[indexObj] = GameObject.Find(value);
             indexObj++;
-        }        
+        }   
 
-        //dataLines16 = new string[255];
         goObj0 = GameObject.Find("oeObjZERO");
         textObject0 = GameObject.Find("text0").GetComponent<TextMesh>();
         rend1 = goObj0.GetComponent<Renderer>();
@@ -226,7 +211,6 @@ public class oeCore : MonoBehaviour
             foreach (var goName in goObj)
             {
                 //Debug.Log("save: " + index + " > " + go.name); //go nemá name? err
-                //Debug.Log("save: " + index + " > " + goName.name);
                 Debug.Log("save: " + index + " > " + oeObjNameDict[index]);
                 //oeObjArray[index] = new oeObjClass(go, go.name, index);
                 index++;
@@ -235,9 +219,7 @@ public class oeCore : MonoBehaviour
     
     private void oeSave()
     {
-		if (!goDuplicatesCheck) {
-			return;
-		}
+		if (!goDuplicatesCheck()) {			return;		}
 
         oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
         int index = 0;
@@ -252,7 +234,7 @@ public class oeCore : MonoBehaviour
         System.IO.File.WriteAllText(data17File, json);
     }
 
-    private void oeSaveDict()
+    /*private void oeSaveDict()
     {
         //oeObjClass[] oeObjArray = new oeObjClass[goObj.Length];
         Dictionary<string, oeObjClass> oeObjDict =  new Dictionary<string, oeObjClass>();
@@ -271,19 +253,18 @@ public class oeCore : MonoBehaviour
 
         ///Debug.Log(data16File);
         System.IO.File.WriteAllText(data17FileDict, json);
-    }
+    }*/
 
 	private bool goDuplicatesCheck() {
 		GameObject[] objectsToSave = GameObject.FindGameObjectsWithTag("oeSave");
 		List<string> names = new List<string>();
-
 		foreach (var o in objectsToSave) {
 			if (names.Contains(o.name)) {
 				return false;
 			}
 			names.Add (o.name);
 		}
-
 		return true;
-	}
+	}   
+
 }
