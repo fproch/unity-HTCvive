@@ -17,8 +17,10 @@ public class oeData : MonoBehaviour
     GameObject go;
     Renderer rend;
     public int xMinus;
+    public int yMinus;
     public enum NO { Sphere, Cube }
     public float scaleSize = 0.1f;
+    public int scaleTransp = 5;
     public NO newObjects;
     public string nameObj = "dObj";
     public bool debugList = false;
@@ -65,26 +67,23 @@ public class oeData : MonoBehaviour
             lineData = (dataLines[indexLine].Trim()).Split(";"[0]);
             go = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            try
-            {
-                float xi = float.Parse(lineData[0]) - xMinus;
-                float yi = float.Parse(lineData[0]);
-                float zi = float.Parse(lineData[0]);
+            //try
+            //{
+                float xi = (float.Parse(lineData[0]) - xMinus)/ scaleTransp;
+                float yi = (float.Parse(lineData[1]) - yMinus)/ scaleTransp;
+                float zi = (float.Parse(lineData[2]))/ scaleTransp;
                
                 //Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
                 //gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
                 //go.GetComponent<Rigidbody>().useGravity = true;
                 go.name = nameObj + "." + indexLine;
-                if (debugList) Debug.Log(go.name);
+                if (debugList) Debug.Log(go.name+": "+ xi + ", " + yi + ", " + zi);
 
                 go.transform.position = new Vector3(xi, yi, zi);
                 go.transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
                 
-            }
-            catch
-            {
-                Debug.Log("Err: try Parse...");
-            }
+            //}
+            //catch {  Debug.Log("Err: try Parse...");  }
 
             rend = go.GetComponent<Renderer>();
             indexLine++;
