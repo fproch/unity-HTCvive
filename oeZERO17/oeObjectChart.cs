@@ -15,7 +15,7 @@ public class oeObjectChart : MonoBehaviour
     GameObject go;
     Renderer rend;
 
-    public enum NO { Sphere, Cube }
+    public enum NO { Sphere, Cube, Cylinder }
 
     public float scaleSize = 0.1f;
     public float distanceDivide = 5;
@@ -24,18 +24,21 @@ public class oeObjectChart : MonoBehaviour
 
     private Vector3 startVector; //stred vykresleni matice
     public Transform strartTransform;
-    public NO newObjects;
+    public NO primitiveType;
     public GR chartType;
 
     public string nameObj = "dG";
     public bool debugList = false;
+    public bool doUpdate = false;
+    public int everyMilisec = 10;
+    int cntU;
 
 
     //================================================================================================
     //start-inicializace
     void Start()
     {
-        Debug.Log("oeObjectChart.constructor - newObjects: " + newObjects);
+        Debug.Log("oeObjectChart.constructor - newObjects: " + primitiveType);
         startVector = strartTransform.position;
 
 
@@ -46,8 +49,16 @@ public class oeObjectChart : MonoBehaviour
     //timer cca60 FPS
     void Update()
     {
-      
+        cntU++;
+       
 
+        if (cntU % everyMilisec == 0)
+        {
+            if (doUpdate) oeObjChartUpdate();
+        }
+
+
+       
     }
 
     //------------------------------------------------------------------------------------------------
@@ -56,19 +67,35 @@ public class oeObjectChart : MonoBehaviour
 
     private void oeObjChart()
     {
+        objMatrix = new GameObject[sizeX, sizeX];
+
         int ii = 0;
         for (int y = 0; y < sizeX; y++)
         {
             for (int x = 0; x < sizeX; x++) {
+                switch (primitiveType.ToString())
+                {
+                    case "Cube":                       
+                        objMatrix[x, y] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        break;
+                    case "Sphere":
+                        objMatrix[x, y] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        break;
+                    case "Cylinder":
+                        objMatrix[x, y] = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                        break;
 
-                go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                // objMatrix[x, y] = go;
-                
-                
+
+                    default:
+                        objMatrix[x, y] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        break;
+                }
+                //objMatrix[x, y] = go;                
+
                 //Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
                 //gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
                 //go.GetComponent<Rigidbody>().useGravity = true;
-                go.name = nameObj + matrixIndex+"." + ii;
+                objMatrix[x, y].name = nameObj + matrixIndex+"." + ii;
                 //cubeMatrix2[i, j]
 
                 float xi = x/ distanceDivide;
@@ -104,20 +131,87 @@ public class oeObjectChart : MonoBehaviour
 
 
                        
-                if (debugList) Debug.Log(go.name + ": " + xi + ", " + yi + ", " + zi);
-                go.transform.position = new Vector3(startVector.x+xi, startVector.y+yi, startVector.z+zi);
-                go.transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
+                if (debugList) Debug.Log(objMatrix[x, y].name+": " + xi + ", " + yi + ", " + zi);
+                objMatrix[x, y].transform.position = new Vector3(startVector.x+xi, startVector.y+yi, startVector.z+zi);
+                objMatrix[x, y].transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
 
                 //}
                 //catch {  Debug.Log("Err: try Parse...");  }
-                rend = go.GetComponent<Renderer>();
-                rend.material.color = mainColor;
-
-                rend = go.GetComponent<Renderer>();
+                rend = objMatrix[x, y].GetComponent<Renderer>();
+                rend.material.color = mainColor;               
             }
             ii++;
         }
     }
+
+
+
+    private void oeObjChartUpdate()
+    {
+        //objMatrix = new GameObject[sizeX, sizeX];
+        startVector = strartTransform.position;
+
+        int ii = 0;
+        for (int y = 0; y < sizeX; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+
+                //objMatrix[x, y] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                //objMatrix[x, y] = go;                
+
+                //Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
+                //gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
+                //go.GetComponent<Rigidbody>().useGravity = true;
+                //objMatrix[x, y].name = nameObj + matrixIndex + "." + ii;
+                //cubeMatrix2[i, j]
+
+                float xi = x / distanceDivide;
+                float yi = y / distanceDivide;
+                float zi = 0;
+
+                switch (chartType.ToString())
+                {
+                    case "G1":
+                        zi = (10) / distanceDivide;
+                        break;
+                    case "G2":
+                        zi = (x + y) / distanceDivide;
+                        break;
+                    case "G3":
+                        //zi = (Mathf.Sin(x/10) * Mathf.Cos(y/10)) / distanceDivide*5;
+                        zi = (Mathf.Sin((float)x / 10) * Mathf.Cos((float)y / 10)) / distanceDivide * 5;
+                        break;
+
+                    case "G4":
+                        //zi = (Mathf.Sin(x/10) * Mathf.Cos(y/10)) / distanceDivide*5;
+                        zi = (Mathf.Sin((float)x / 10) * Mathf.Cos((float)y / 10)) / distanceDivide * 5;
+                        break;
+                    case "G5":
+                        //zi = (Mathf.Sin(x/10) * Mathf.Cos(y/10)) / distanceDivide*5;
+                        zi = (Mathf.Sin((float)x / 10) * Mathf.Cos((float)y / 10)) / distanceDivide * 5;
+                        break;
+
+                    default:
+                        zi = (x + y) / distanceDivide;
+                        break;
+                }
+
+
+
+                //if (debugList) Debug.Log(objMatrix[x, y].name + ": " + xi + ", " + yi + ", " + zi);
+                objMatrix[x, y].transform.position = new Vector3(startVector.x + xi, startVector.y + yi, startVector.z + zi);
+                //objMatrix[x, y].transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
+
+                //}
+                //catch {  Debug.Log("Err: try Parse...");  }
+                //rend = objMatrix[x, y].GetComponent<Renderer>();
+                //rend.material.color = mainColor;
+            }
+            ii++;
+        }
+    }
+
 }
       
 
