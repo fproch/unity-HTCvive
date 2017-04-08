@@ -10,6 +10,7 @@ public class oeObjectChart : MonoBehaviour
 {
     //příprava
     public int matrixIndex;
+    public string label = "label";
     public int sizeX = 50;
     public GameObject[,] objMatrix;
     GameObject go;
@@ -28,10 +29,14 @@ public class oeObjectChart : MonoBehaviour
     public GR chartType;
 
     public string nameObj = "dG";
+    public bool transformXZ = false;
+    public bool transformYZ = false;
     public bool debugList = false;
     public bool doUpdate = false;
     public int everyMilisec = 10;
+
     int cntU;
+    float tempi;
 
 
     //================================================================================================
@@ -129,8 +134,9 @@ public class oeObjectChart : MonoBehaviour
                         break;
                 }
 
+                if (transformXZ) { float tempi = zi; zi = xi; xi = tempi; }
+                if (transformYZ) { tempi = zi; zi = yi; yi = tempi; }
 
-                       
                 if (debugList) Debug.Log(objMatrix[x, y].name+": " + xi + ", " + yi + ", " + zi);
                 objMatrix[x, y].transform.position = new Vector3(startVector.x+xi, startVector.y+yi, startVector.z+zi);
                 objMatrix[x, y].transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
@@ -197,7 +203,8 @@ public class oeObjectChart : MonoBehaviour
                         break;
                 }
 
-
+                if (transformXZ) {  tempi = zi; zi = xi; xi = tempi; }
+                if (transformYZ) {  tempi = zi; zi = yi; yi = tempi; }
 
                 //if (debugList) Debug.Log(objMatrix[x, y].name + ": " + xi + ", " + yi + ", " + zi);
                 objMatrix[x, y].transform.position = new Vector3(startVector.x + xi, startVector.y + yi, startVector.z + zi);
