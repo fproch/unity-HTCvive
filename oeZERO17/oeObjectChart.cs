@@ -10,7 +10,10 @@ public class oeObjectChart : MonoBehaviour
 {
     //příprava
     public int matrixIndex;
-    public string label = "label";
+    public string labelTxt = "label";
+    public float characterSize = 0.05f;
+    public int fontSize = 10;
+    public bool showLabel = false;
     public int sizeX = 50;
     public GameObject[,] objMatrix;
     GameObject go;
@@ -32,10 +35,13 @@ public class oeObjectChart : MonoBehaviour
     public bool transformXZ = false;
     public bool transformYZ = false;
     public bool debugList = false;
-    public bool doUpdate = false;
+    public bool updatePosition = true;
+    public bool updateChart = false;
     public int everyMilisec = 10;
 
+    private GameObject InputUI;
     int cntU;
+    int ii = 0;
     float tempi;
 
 
@@ -46,7 +52,7 @@ public class oeObjectChart : MonoBehaviour
         Debug.Log("oeObjectChart.constructor - newObjects: " + primitiveType);
         startVector = strartTransform.position;
 
-
+        if (showLabel) oeText(labelTxt);
         oeObjChart();
     }
     //------------------------------------------------/start----------------------------------------
@@ -54,19 +60,39 @@ public class oeObjectChart : MonoBehaviour
     //timer cca60 FPS
     void Update()
     {
-        cntU++;
-       
-
+        cntU++; 
         if (cntU % everyMilisec == 0)
         {
-            if (doUpdate) oeObjChartUpdate();
-        }
-
-
-       
+            if (updatePosition) oeObjPositionUpdate();           
+        }       
     }
 
     //------------------------------------------------------------------------------------------------
+    private void oeText(string txt)
+    {
+
+        InputUI = new GameObject("tx");
+
+        InputUI.transform.position = strartTransform.position;
+        /*
+        InputUI.transform.parent = transform;
+        InputUI.transform.position = transform.position
+                                         + transform.forward * 0.32f                     //moving it in front of the cam so that it can be seen at all
+                                         + transform.right * cameraWidth * -0.000215f    //positioning to the bottom-left of the screen
+                                         + transform.up * -0.17f;                        //if the camera dimensions change - text stays on bottom, but shifts side-wise
+                                                                                        //  -> first if in Update()
+         InputUI.transform.rotation = transform.rotation;
+         InputUI.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
+          */
+
+        InputUI.AddComponent<TextMesh>();
+        InputUI.GetComponent<TextMesh>().characterSize = characterSize; // This is to ensure
+        InputUI.GetComponent<TextMesh>().fontSize = fontSize;       // that the text is not blurry
+        InputUI.GetComponent<TextMesh>().anchor = TextAnchor.LowerLeft;
+
+        InputUI.GetComponent<TextMesh>().text = "   <" + nameObj + matrixIndex + "> " + txt;
+    }
+
 
 
 
@@ -150,14 +176,16 @@ public class oeObjectChart : MonoBehaviour
         }
     }
 
+    
 
 
-    private void oeObjChartUpdate()
+    private void oeObjPositionUpdate()
     {
-        //objMatrix = new GameObject[sizeX, sizeX];
-        startVector = strartTransform.position;
 
-        int ii = 0;
+        startVector = strartTransform.position;
+        InputUI.transform.position = strartTransform.position;
+
+
         for (int y = 0; y < sizeX; y++)
         {
             for (int x = 0; x < sizeX; x++)
@@ -186,7 +214,9 @@ public class oeObjectChart : MonoBehaviour
                         break;
                     case "G3":
                         //zi = (Mathf.Sin(x/10) * Mathf.Cos(y/10)) / distanceDivide*5;
-                        zi = (Mathf.Sin((float)x / 10) * Mathf.Cos((float)y / 10)) / distanceDivide * 5;
+                        float del = 10;
+                        if (updateChart) del = ii / 30;                        
+                        zi = (Mathf.Sin((float)x / del) * Mathf.Cos((float)y / del)) / distanceDivide * 5;
                         break;
 
                     case "G4":
@@ -216,6 +246,7 @@ public class oeObjectChart : MonoBehaviour
                 //rend.material.color = mainColor;
             }
             ii++;
+            if (ii > 300) ii = 0;
         }
     }
 
