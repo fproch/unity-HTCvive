@@ -6,6 +6,7 @@ public class oeTexture1 : MonoBehaviour {
 
     public Color colorN;
     public Color colorN2;
+    public Color colorN3;
     public bool Fractal1 = true;
     public bool Noise1 = true;
     public bool Noise2 = true;
@@ -15,6 +16,8 @@ public class oeTexture1 : MonoBehaviour {
     public bool StartNoise2 = true;
     public bool StartFrame = false;
     public bool StartLines = false;
+    public bool StartCircle = false;
+    public int radius = 50;
 
     Texture2D texture = new Texture2D(256, 256); //128
     Color colorRed = Color.red;
@@ -63,6 +66,20 @@ public class oeTexture1 : MonoBehaviour {
                 for (int y = 0; y < texture.width/10+1; y++)  texture.SetPixel(x, y*10, colorN2);
                // texture.SetPixel(x, texture.height - 1, colorN);
 
+            }
+        }
+
+        if (StartCircle)
+        {
+            int r = radius; // radius
+            int ox = texture.height/2, oy = texture.width/2; // origin
+
+            for (int x = -r; x < r; x++)
+            {
+                int height = (int)Mathf.Sqrt(r * r - x * x);
+
+                for (int y = -height; y < height; y++)
+                    texture.SetPixel(x + ox, y + oy, colorN3);
             }
         }
 
