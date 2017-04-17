@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class oeTexture1 : MonoBehaviour {
-
-    public Color colorN;
+   
+    /*public Color colorN;
     public Color colorN2;
     public Color colorN3;
     public bool Fractal1 = true;
@@ -19,7 +19,7 @@ public class oeTexture1 : MonoBehaviour {
     public bool StartCircle = false;
     public int radius = 50;
 
-    Texture2D texture = new Texture2D(256, 256); //128
+    private Texture2D texture = new Texture2D(128, 128); //128
     Color colorRed = Color.red;
 
     // Use this for initialization
@@ -143,4 +143,6 @@ public class oeTexture1 : MonoBehaviour {
         texture.Apply();
 
     }
+    */
+   
 }

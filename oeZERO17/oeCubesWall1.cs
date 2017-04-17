@@ -24,7 +24,7 @@ public class oeCubesWall1 : MonoBehaviour
     {
         Debug.Log("oeCubes.start() > TestCreate cubeMatrix2");
 
-        startMatrix = new Vector3(-numCube / 2, -0.5f, -numCube / 2+ deltaZet);  //pocatek vykresleni matice
+        //startMatrix = new Vector3(-numCube / 2, -0.5f, -numCube / 2+ deltaZet);  //pocatek vykresleni matice
         TestCreateMatrix2();
     }
 

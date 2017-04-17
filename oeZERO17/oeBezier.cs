@@ -103,6 +103,10 @@ public class oeBezier : MonoBehaviour
             controlPoints.Add(target2.transform.position);
             controlObjects.Add(target3);
             controlPoints.Add(target3.transform.position);
+            controlObjects.Add(target4);
+            controlPoints.Add(target4.transform.position);
+            controlObjects.Add(target5);
+            controlPoints.Add(target5.transform.position);
         }
         else
         {
@@ -148,17 +152,17 @@ public class oeBezier : MonoBehaviour
 
     private void Randomize()
     {
-        if (!randomize)
-        {
-            return;
-        }
+        // if (!randomize)        {            return;        }
 
         for (int i = 0; i < noOfControls; i++)
         {
-            var random1 = Random.Range(-randomizeStep, randomizeStep);
-            var random2 = Random.Range(-randomizeStep, randomizeStep);
-            var random3 = Random.Range(-randomizeStep, randomizeStep);
-            controlObjects[i].transform.Translate(new Vector3(random1, random2, random3));
+            if (!randomize)
+            {
+                var random1 = Random.Range(-randomizeStep, randomizeStep);
+                var random2 = Random.Range(-randomizeStep, randomizeStep);
+                var random3 = Random.Range(-randomizeStep, randomizeStep);
+                controlObjects[i].transform.Translate(new Vector3(random1, random2, random3));
+            }           
             controlPoints[i] = controlObjects[i].transform.position;
         }
     }

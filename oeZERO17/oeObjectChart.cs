@@ -129,8 +129,8 @@ public class oeObjectChart : MonoBehaviour
                 objMatrix[x, y].name = nameObj + matrixIndex+"." + ii;
                 //cubeMatrix2[i, j]
 
-                float xi = x/ distanceDivide;
-                float yi = y/ distanceDivide;
+                float xi = (x+1)/ distanceDivide;
+                float yi = (y+1)/ distanceDivide;
                 float zi = 0;
 
                 switch (chartType.ToString())
@@ -237,8 +237,12 @@ public class oeObjectChart : MonoBehaviour
                 if (transformYZ) {  tempi = zi; zi = yi; yi = tempi; }
 
                 //if (debugList) Debug.Log(objMatrix[x, y].name + ": " + xi + ", " + yi + ", " + zi);
-                objMatrix[x, y].transform.position = new Vector3(startVector.x + xi, startVector.y + yi, startVector.z + zi);
-                //objMatrix[x, y].transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
+                try
+                {
+                    objMatrix[x, y].transform.position = new Vector3(startVector.x + xi, startVector.y + yi, startVector.z + zi);
+                }
+                catch { }
+                    //objMatrix[x, y].transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
 
                 //}
                 //catch {  Debug.Log("Err: try Parse...");  }
