@@ -64,12 +64,24 @@ public class oeCore : MonoBehaviour
     private int lineWidth = 1;
     private Renderer rend1;
     TextMesh textObject0;
+    public bool terminal = false;
 
     //================================================================================================
     //start-inicializace
     void Start()
     {
         Debug.Log("--- oeCore.Start ---"); //semi-constructor
+        if (terminal)
+        {
+            /*string time = Time.deltaTime;
+            var minutes = time / 60; //Divide the guiTime by sixty to get the minutes.
+            var seconds = time % 60;//Use the euclidean division for the seconds.
+            var fraction = (time * 100) % 100;            
+            */
+            oeCommonDataContainer.addArrStr(0, System.DateTime.Now.ToString());
+            oeCommonDataContainer.addArrStr(0, "> oeCore.Start");
+            oeCommonDataContainer.addArrStr(0, "scene name: " + Application.loadedLevelName);            
+        }
 
         if (ListAllObjects)
         {
@@ -99,7 +111,8 @@ public class oeCore : MonoBehaviour
             //goObj[indexObj] = goTag; //GameObject.Find(value);
             indexObj++;
         }
-        int numObj = indexObj; 
+        int numObj = indexObj;
+        if (terminal) oeCommonDataContainer.addArrStr(0, "> oeSaveTag: "+ numObj + " objects");
 
         Debug.Log("-------- LIST --------");
         //goObj = new GameObject[oeObjName.Length];

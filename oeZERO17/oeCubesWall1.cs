@@ -19,10 +19,14 @@ public class oeCubesWall1 : MonoBehaviour
 
     public Renderer rend2;
     public Vector3 startMatrix; //stred vykresleni matice
+
+    public bool terminal;
+
     //==================================================================================
     void Start()
     {
         Debug.Log("oeCubes.start() > TestCreate cubeMatrix2");
+        if (terminal) oeCommonDataContainer.addArrStr(0, "> oeCubesWall1");
 
         //startMatrix = new Vector3(-numCube / 2, -0.5f, -numCube / 2+ deltaZet);  //pocatek vykresleni matice
         TestCreateMatrix2();

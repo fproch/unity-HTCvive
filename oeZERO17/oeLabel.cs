@@ -9,9 +9,10 @@ public class oeLabel : MonoBehaviour
     public int matrixIndex;
    
     public float characterSize = 0.02f;
-    public int fontSize = 12;
+    public int fontSize = 15;
     public Color fontColor;
     public bool showLabel1 = true;
+    public float littleBitDown = 0;
     public bool showLabel2 = false;
     public bool showLabel3 = false;
     
@@ -32,6 +33,10 @@ public class oeLabel : MonoBehaviour
     private GameObject label2;
     private GameObject label3;
     int cntU;
+
+    public bool label2Data = false;
+    public int dataIndex = 0;
+
    
 
 
@@ -45,7 +50,7 @@ public class oeLabel : MonoBehaviour
         startVector = strartTransform.position;
 
         if (showLabel1) oeText1(labelTxt);
-        if (showLabel2) oeText2(labelTxt);
+        if (showLabel2 || label2Data) oeText2(labelTxt);
         if (showLabel3) oeText3(labelTxt);
         if (labelObjName1) label1.GetComponent<TextMesh>().text = strartTransform.name; // this.name;   //"name123";
 
@@ -95,12 +100,20 @@ public class oeLabel : MonoBehaviour
                 if (labelRnd3) label3.GetComponent<TextMesh>().text = random1.ToString() + "\n" + (random1 / 2).ToString() + "\n" + (random1 / 3).ToString();
 
             }
+
+            if (label2Data)
+            {
+                // oeCommonDataContainer.setArrInt(indexData, (int)e.normalizedValue);
+                label2.transform.position = strartTransform.position + new Vector3(0, lineOffset(2), 0);
+                label2.transform.eulerAngles = strartTransform.eulerAngles;
+                label2.GetComponent<TextMesh>().text = dataIndex.ToString() + ": " + oeCommonDataContainer.getArrInt(dataIndex);//  + "\n" + oeCommonDataContainer.getArrStr(dataIndex);
+            }          
+
         }
     }
 
     //------------------------------------------------------------------------------------------------
-    public float lineOffset(int line)   { return (float)(fontSize * line*2 -50) / -1000; }
-
+    public float lineOffset(int line)   { return (float)(fontSize * line*2 -50) / -1000 - littleBitDown; }
 
 
     private void oeText1(string txt)
@@ -155,7 +168,6 @@ public class oeLabel : MonoBehaviour
 
         label3.GetComponent<TextMesh>().text = "   " + txt;
     }
-
 
 
 
