@@ -80,7 +80,7 @@ public class oeTerminal : MonoBehaviour
     
     private void oeTerminalText(bool create, string txt)
     {
-        if (create) label1 = new GameObject("tx");
+        if (create) label1 = new GameObject("tx"+ dataIndex.ToString());
         if (showHeadline) txt = headline + "\n " + txt;
         label1.transform.position = strartTransform.position + startVector; // x, y=up, z
         label1.transform.eulerAngles = strartTransform.eulerAngles;

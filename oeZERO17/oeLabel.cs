@@ -7,7 +7,7 @@ public class oeLabel : MonoBehaviour
 {
     //příprava
     public int matrixIndex;
-   
+
     public float characterSize = 0.02f;
     public int fontSize = 15;
     public Color fontColor;
@@ -15,7 +15,7 @@ public class oeLabel : MonoBehaviour
     public float littleBitDown = 0;
     public bool showLabel2 = false;
     public bool showLabel3 = false;
-    
+
     public bool labelObjName1 = false;
     public string labelTxt = "label"; // for label2
     public bool labelCnt3 = false;
@@ -25,7 +25,7 @@ public class oeLabel : MonoBehaviour
     private Vector3 startVector; //stred vykresleni matice
     public Transform strartTransform;
     public bool buttonTranf = false;
-   
+
     public bool doUpdate = false;
     public int everyMilisec = 10;
 
@@ -37,7 +37,7 @@ public class oeLabel : MonoBehaviour
     public bool label2Data = false;
     public int dataIndex = 0;
 
-   
+
 
 
     //================================================================================================
@@ -61,11 +61,12 @@ public class oeLabel : MonoBehaviour
     void Update()
     {
         cntU++;
-        if (labelCnt3) {
+        if (labelCnt3)
+        {
             //labelTxt = cntU.ToString();
             //InputUI.transform.position = strartTransform.position;
             //InputUI.transform.eulerAngles = strartTransform.eulerAngles;
-            label3.GetComponent<TextMesh>().text = (cntU/50).ToString();
+            label3.GetComponent<TextMesh>().text = (cntU / 50).ToString();
         }
 
         if (cntU % everyMilisec == 0)
@@ -107,13 +108,13 @@ public class oeLabel : MonoBehaviour
                 label2.transform.position = strartTransform.position + new Vector3(0, lineOffset(2), 0);
                 label2.transform.eulerAngles = strartTransform.eulerAngles;
                 label2.GetComponent<TextMesh>().text = dataIndex.ToString() + ": " + oeCommonDataContainer.getArrInt(dataIndex);//  + "\n" + oeCommonDataContainer.getArrStr(dataIndex);
-            }          
+            }
 
         }
     }
 
     //------------------------------------------------------------------------------------------------
-    public float lineOffset(int line)   { return (float)(fontSize * line*2 -50) / -1000 - littleBitDown; }
+    public float lineOffset(int line) { return (float)(fontSize * line * 2 - 50) / -1000 - littleBitDown; }
 
 
     private void oeText1(string txt)
@@ -134,7 +135,7 @@ public class oeLabel : MonoBehaviour
         label1.AddComponent<TextMesh>();
         label1.GetComponent<TextMesh>().characterSize = characterSize; // This is to ensure
         label1.GetComponent<TextMesh>().fontSize = fontSize;       // that the text is not blurry
-        //label1.GetComponent<TextMesh>().color = fontColor;
+        //label1.GetComponent<TextMesh>().font.material.color = fontColor;
         label1.GetComponent<TextMesh>().anchor = TextAnchor.LowerLeft;
 
         label1.GetComponent<TextMesh>().text = "   " + txt;
@@ -158,7 +159,7 @@ public class oeLabel : MonoBehaviour
     {
         label3 = new GameObject("tx3");
         label3.transform.position = strartTransform.position + new Vector3(0, lineOffset(3), 0);
-       
+
         label3.transform.eulerAngles = strartTransform.eulerAngles;
 
         label3.AddComponent<TextMesh>();
@@ -172,6 +173,3 @@ public class oeLabel : MonoBehaviour
 
 
 }
-
-
-
