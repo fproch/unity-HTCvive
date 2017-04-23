@@ -14,11 +14,15 @@ public class oeTextScreen : MonoBehaviour {
     public Font newFont;
     public TF textFormat;
     public bool alignment;
+  
 
     private bool showPopUp; //show/hide text input window
     private string textInput; //temporary storage for text input from user
     private GameObject textScreen;
     private Color objectColor; //control indicator of color change of the parent object
+     
+    public string screenText = "123 a a a a a a a ";
+    public bool externText = true; 
     
     void Start ()
     {
@@ -42,37 +46,51 @@ public class oeTextScreen : MonoBehaviour {
         textScreen.GetComponent<TextMesh>().font.material.color = InvertColor(objectColor); // sets color opposite to that of the parent object, 
                                                                                             // but allows hue modification through .font.color
 
-        textScreen.GetComponent<TextMesh>().text = ">\toeZERO\t<\npreAlpha Build\n\tverze 17";
-
         textScreen.AddComponent<TextWrap>(); //script for inputing text wrapped to the objects dimensions
-    }
 
+        if (externText)
+        {
+            //textScreen.GetComponent<TextMesh>().text = screenText;
+            /*textInput = screenText;
+            enterText();
+            */
+            textScreen.GetComponent<TextWrap>().addText(false, screenText);
+        }
+        else textScreen.GetComponent<TextMesh>().text = ">\toeZERO\t<\npreAlpha Build\n\tverze 17";
+    }
+    
+    
+    /*
     void Update () {
-        if (Input.GetKeyDown(KeyCode.T)) // Show text input window
-            openTextInput();
-
-        if(Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        if (!externText)
         {
-            if (showPopUp)
-                enterText();
-            else
+            if (Input.GetKeyDown(KeyCode.T)) // Show text input window
                 openTextInput();
+
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+            {
+                if (showPopUp)
+                    enterText();
+                else
+                    openTextInput();
+            }
         }
 
-        if (newFont != null && textScreen.GetComponent<TextMesh>().font != newFont)
-        {
-            textScreen.GetComponent<TextMesh>().font = newFont;
-            Debug.Log("New font: " + textScreen.GetComponent<TextMesh>().font);
-        }
+            if (newFont != null && textScreen.GetComponent<TextMesh>().font != newFont)
+            {
+                textScreen.GetComponent<TextMesh>().font = newFont;
+                Debug.Log("New font: " + textScreen.GetComponent<TextMesh>().font);
+            }
 
-        if (transform.GetComponent<Renderer>().material.color != objectColor)
-        {
-            objectColor = transform.GetComponent<Renderer>().material.color;
-            textScreen.GetComponent<TextMesh>().font.material.color = InvertColor(objectColor);
-        }
+            if (transform.GetComponent<Renderer>().material.color != objectColor)
+            {
+                objectColor = transform.GetComponent<Renderer>().material.color;
+                textScreen.GetComponent<TextMesh>().font.material.color = InvertColor(objectColor);
+            }
 
-        // alignText(); //remnants of testing the positioning of text alignment
+            // alignText(); //remnants of testing the positioning of text alignment
     }
+
 
     // creation of the input window
     void OnGUI()
@@ -97,7 +115,7 @@ public class oeTextScreen : MonoBehaviour {
         textInput = "Input text";
         showPopUp = true;
     }
-
+    */
     // takes input from input window and if aplicable, adds it, wrapped, to the screen
     void enterText()
     {
@@ -110,13 +128,13 @@ public class oeTextScreen : MonoBehaviour {
         }
         showPopUp = false; //Hide text input window
     }
-
+    
     // returns a color on the other end of color spectrum
     Color InvertColor(Color oldColor)
     {
         return new Color(1.0f - oldColor.r, 1.0f - oldColor.g, 1.0f - oldColor.b);
     }
-
+    
     // aligns and positions text based on choise from public variable chosen in inspector
     void alignText()
     {

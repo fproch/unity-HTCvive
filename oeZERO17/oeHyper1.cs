@@ -1,10 +1,10 @@
 ﻿namespace VRTK.Examples
 {
     using UnityEngine;
-    
 
-    public class oeGun : VRTK_InteractableObject
-    {   
+
+    public class oeHyper1 : VRTK_InteractableObject
+    {
 
         private int num = 0;
         public int indexData = 0;
@@ -12,12 +12,12 @@
 
         private GameObject bullet;
         public GameObject goA;
-        public GameObject goB;
+       // public GameObject goB;
         private float bulletSpeed = 1000f;
         private float bulletLife = 5f;
 
-        public bool slerp = true;
-        public bool scale = false;
+        public bool slerp = false;
+        public bool scale = true;
         public bool debugLog = false;
 
         public override void StartUsing(GameObject usingObject)
@@ -34,7 +34,7 @@
             //goA = GameObject.Find("hyperA");
             //goB = GameObject.Find("hyperB");
             goA.SetActive(stav);
-            goB.SetActive(stav);
+           // goB.SetActive(stav);
         }
 
         //----------------------------------
@@ -46,28 +46,28 @@
             gameObject.GetComponent<oeLabel>().labelTxt = num.ToString();
             num++;
             oeCommonDataContainer.setArrInt(indexData, num);
-            oeCommonDataContainer.setArrInt(indexData+1, System.Convert.ToInt32(stav));
+            oeCommonDataContainer.setArrInt(indexData + 1, System.Convert.ToInt32(stav));
             stav = !stav;
 
-           
-          
-                goA.GetComponent<oeSlerp>().useObject(slerp, scale, 0);
-                goB.GetComponent<oeSlerp>().useObject(slerp, scale, 1);
-           
 
-          
+
+            goA.GetComponent<oeSlerp>().useObject(slerp, scale, 0);
+            //goB.GetComponent<oeSlerp>().useObject(slerp, scale, 1);
+
+
+
             // if (stav) posun = true;
         }
-       
-        private void FireBullet()
-        {           
 
-           GameObject bulletClone = Instantiate(bullet, bullet.transform.position, bullet.transform.rotation) as GameObject;
+        private void FireBullet()
+        {
+
+            GameObject bulletClone = Instantiate(bullet, bullet.transform.position, bullet.transform.rotation) as GameObject;
             bulletClone.SetActive(true);
             Rigidbody rb = bulletClone.GetComponent<Rigidbody>();
             rb.AddForce(-bullet.transform.forward * bulletSpeed);
             Destroy(bulletClone, bulletLife);
         }
-      
+
     }
 }

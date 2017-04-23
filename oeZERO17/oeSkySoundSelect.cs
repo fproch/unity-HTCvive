@@ -44,7 +44,7 @@ public class oeSkySoundSelect : MonoBehaviour
         //Octopus1 = GameObject.Find("Octopus1");
 
         oeAudioMute();
-        oeAudio0.active = true;
+        oeAudio0.SetActive(true);
         //oeAudio5.active = false;
         //oeBezier.active = false;
 
@@ -67,11 +67,11 @@ public class oeSkySoundSelect : MonoBehaviour
     //============================================================================================================
     void oeAudioMute()
     {
-        oeAudio0.active = false;
-        oeAudio1.active = false;
-        oeAudio2.active = false;
-        oeAudio3.active = false;
-        oeAudio4.active = false;
+        oeAudio0.SetActive(false);
+        oeAudio1.SetActive(false);
+        oeAudio2.SetActive(false);
+        oeAudio3.SetActive(false);
+        oeAudio4.SetActive(false);
     }
     
 
@@ -94,7 +94,7 @@ public class oeSkySoundSelect : MonoBehaviour
             Material newMat = Resources.Load("OverCast2Sky", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeAudioMute();
-            oeAudio1.active = true;
+            oeAudio1.SetActive(true);
 
         }
         if (selObj == "sel2") //ora
@@ -110,7 +110,7 @@ public class oeSkySoundSelect : MonoBehaviour
             Material newMat = Resources.Load("SkyboxFire", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeAudioMute();
-            oeAudio2.active = true;
+            oeAudio2.SetActive(true);
 
 
         }
@@ -121,8 +121,8 @@ public class oeSkySoundSelect : MonoBehaviour
             Material newMat = Resources.Load("SkyMorning", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeAudioMute();
-            oeAudio3.active = true;
-           
+            oeAudio3.SetActive(true);
+
         }
 
         if (selObj == "sel4") //gre
@@ -130,7 +130,7 @@ public class oeSkySoundSelect : MonoBehaviour
             Material newMat = Resources.Load("PurpleNebula", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeAudioMute();
-            oeAudio4.active = true;
+            oeAudio4.SetActive(true);
         }
 
 
@@ -139,7 +139,7 @@ public class oeSkySoundSelect : MonoBehaviour
             Material newMat = Resources.Load("SkyNight", typeof(Material)) as Material;
             RenderSettings.skybox = newMat;
             oeAudioMute();
-            oeAudio0.active = true;
+            oeAudio0.SetActive(true);
         }
         //============================================================================================================   
     }

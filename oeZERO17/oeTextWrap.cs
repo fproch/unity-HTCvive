@@ -12,6 +12,7 @@ using System.Collections;
 public class TextWrap : MonoBehaviour
 {
     public float MaxWidth;
+    public string inputText;
 
     private TextMesh TheMesh;
 
@@ -63,8 +64,45 @@ public class TextWrap : MonoBehaviour
     }
 
     // segments input string into lines to fit into set width
+    public void addText(bool wrapp, string UnwrappedText)
+    {
+       inputText = UnwrappedText;
+        if (wrapp)
+        {
+
+            if (MaxWidth == 0)
+            {
+                TheMesh.text = UnwrappedText;
+                return;
+            }
+
+            string builder = "";
+            string text = UnwrappedText;
+
+            string[] parts = text.Split(' ');
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                string part = BreakPartIfNeeded(parts[i]);
+                TheMesh.text += part + " ";
+
+                if (TheMesh.GetComponent<Renderer>().bounds.extents.x > MaxWidth)
+                {
+                    TheMesh.text = builder.TrimEnd() + System.Environment.NewLine + part + " ";
+                }
+                builder = TheMesh.text;
+            }
+        }
+        else TheMesh.text = UnwrappedText;
+
+
+
+    }
+
     public void addWrappedText(string UnwrappedText)
     {
+        //inputText = UnwrappedText;
+
         if (MaxWidth == 0)
         {
             TheMesh.text = UnwrappedText;
