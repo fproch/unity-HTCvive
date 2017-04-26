@@ -43,7 +43,7 @@
         {
             //oeLabel
             if (debugLog) Debug.Log(num.ToString());
-            gameObject.GetComponent<oeLabel>().labelTxt = num.ToString();
+            //gameObject.GetComponent<oeLabel>().labelTxt = num.ToString();
             num++;
             oeCommonDataContainer.setArrInt(indexData, num);
             oeCommonDataContainer.setArrInt(indexData + 1, System.Convert.ToInt32(stav));
