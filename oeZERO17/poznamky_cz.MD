@@ -16,6 +16,10 @@ na pozice 3 místa, natočení nechat<br />
 
 práce s texturou:<br />
 https://docs.unity3d.com/ScriptReference/Texture2D.SetPixel.html<br />
+progresivní mesh<br />
+https://forum.unity3d.com/threads/use-progressive-mesh-technology-in-your-unity-project.338123/<br />
+
+
 <hr />
 <br />
 HyperObject1 - scale terminal / 3Dobject / picture:<br />
