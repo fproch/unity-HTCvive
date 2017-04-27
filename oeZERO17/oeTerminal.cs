@@ -15,7 +15,7 @@ public class oeTerminal : MonoBehaviour
     public Color fontColor;
 
     public Transform strartTransform;
-    private Vector3 startVector = new Vector3(0.02f, 0, 0);
+    public Vector3 startVector = new Vector3(0.02f, 0, 0);
 
     public bool doUpdate = false;
     public int everyMilisec = 10;
@@ -23,9 +23,10 @@ public class oeTerminal : MonoBehaviour
     private GameObject label1;
     int cntU;
     public bool logInfo = false;
+
     private int terminalNumLines = 16;
-
-
+    //public int offsetX = 0;
+    //public int offsetY = 0;
 
 
     string terminalText = "terminal test\n";
@@ -55,7 +56,7 @@ public class oeTerminal : MonoBehaviour
             if (dataIndex == 2)
             {
                 string terminalText2 = "";
-                for (int i = 0; i < 9; i++)
+                for (int i = 0; i < 16; i++)
                 {
                     terminalText2 = terminalText2 + "\n" + i.ToString() + ": " + oeCommonDataContainer.getArrInt(i).ToString();
                 }
@@ -77,7 +78,14 @@ public class oeTerminal : MonoBehaviour
             oeTerminalText(false, terminalText); //true = create again.. for painting width text ;-)
         }
     }
-    
+
+    public void oeTerminalEnable(bool en)
+    {
+        // goA.SetActive(stav);
+        if (!en) label1.GetComponent<TextMesh>().text = " ";// terminalText = "";
+    }
+
+
     private void oeTerminalText(bool create, string txt)
     {
         if (create) label1 = new GameObject("tx"+ dataIndex.ToString());
@@ -100,12 +108,8 @@ public class oeTerminal : MonoBehaviour
         //label1.GetComponent<MeshRenderer>().material.SetColor("_Color", fontColor);
         //label1.GetComponent<TextMesh>().color = fontColor;
         label1.GetComponent<TextMesh>().anchor = TextAnchor.LowerLeft;
-
-        label1.GetComponent<TextMesh>().text = "   " + txt;
+        label1.GetComponent<TextMesh>().text = txt;
     }
-
-
-
 
 }
 

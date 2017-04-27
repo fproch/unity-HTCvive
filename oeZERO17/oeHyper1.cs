@@ -16,6 +16,8 @@
         private float bulletSpeed = 1000f;
         private float bulletLife = 5f;
 
+        public bool deactivateTerminal = false;
+
         public bool slerp = false;
         public bool scale = true;
         public bool debugLog = false;
@@ -49,14 +51,9 @@
             oeCommonDataContainer.setArrInt(indexData + 1, System.Convert.ToInt32(stav));
             stav = !stav;
 
-
-
             goA.GetComponent<oeSlerp>().useObject(slerp, scale, 0);
-            //goB.GetComponent<oeSlerp>().useObject(slerp, scale, 1);
+            if (deactivateTerminal)   goA.GetComponent<oeTerminal>().oeTerminalEnable(stav);
 
-
-
-            // if (stav) posun = true;
         }
 
         private void FireBullet()

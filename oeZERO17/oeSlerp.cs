@@ -12,6 +12,7 @@ public class oeSlerp : MonoBehaviour
     private bool activity = false;
     public int objectID;
     public bool debugLog = false;
+
     private Vector3 initScale;
     
     /*public int deltaTime = 1000;
@@ -55,7 +56,10 @@ public class oeSlerp : MonoBehaviour
             else
             {
                 if (!activity)
+                {
                     gameObject.SetActive(false);
+                   
+                }
                 posun = false;
             }
         }
@@ -101,13 +105,6 @@ public class oeSlerp : MonoBehaviour
         if (scale)
         {
             scaleActive = true;
-        }
-
-
-
-
-
-
-
+        }        
     }
 }
