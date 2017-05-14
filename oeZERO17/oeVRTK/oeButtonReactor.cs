@@ -7,11 +7,13 @@
     {
         public int indexData = 0;
         public GameObject go;
+        public GameObject goBum;
         public Transform dispenseLocation;
         public bool debugLog = false;
         bool stav = false;
         Light oeLight1;
         GameObject oeAudio1;
+        AudioClip audiosource;
 
         public bool MainLihgt = false;
         public bool MainSound = false;
@@ -23,6 +25,7 @@
         public bool sourcePositionIsController = false;
         public bool asAParent = true;
         public bool useGravity = false;
+        public bool useKinematic = false;
         public float oeMass = 1f;
         public bool cubeYesSphereNo = true;
         public GameObject goCon0;
@@ -37,6 +40,7 @@
         private void Start()
         {
             // test
+            goBum = GameObject.Find("oeBum");
             if (MainLihgt) oeLight1 = GameObject.Find("oeLight1").GetComponent<Light>();
             if (MainSound) oeAudio1 = GameObject.Find("oeAudio");
 
@@ -65,6 +69,7 @@
 
         private void oeGenerateObject()
         {
+            goBum.SetActive(false); // sound1.ok
             cnt++;
             int oeData0 = oeCommonDataContainer.getArrInt(indexData)+1;
             if (debugLog) Debug.Log("--- oeButtonReactor " + oeData0);
@@ -78,13 +83,17 @@
                 go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             }
 
-            if (useGravity)
-            {
-                //pickup.transform.parent = this.transform;
-                Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
-                gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
-                go.GetComponent<Rigidbody>().useGravity = true;
-            }
+            //audiosource = go.AddComponent<AudioSource>(); x
+            //go.GetComponent<AudioSource>. = Resources.Load("idle_power_fist_1"); x
+           
+            goBum.SetActive(true); ///sound1.ok 
+            goBum.GetComponent<AudioSource>().volume = (float)oeData0/100;
+            ///AudioSource.PlayClipAtPoint("idle_power_fist_1") x
+
+            Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
+            gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
+           go.GetComponent<Rigidbody>().useGravity = useGravity;
+           go.GetComponent<Rigidbody>().isKinematic = useKinematic;  
 
             go.name = nameObj + "." + cnt;
             Debug.Log(go.name);
