@@ -3,21 +3,32 @@
     using UnityEngine;
     using UnityEventHelper;
 
+    public enum TR //type reactor
+    { noneR, lightR, soundR, generatorR, toolsR, leftR, rightR }
+
+    public enum TF //type fysic
+    { kinematic, gravity, random }
+
     public class oeButtonReactor : MonoBehaviour
     {
-        public int indexData = 0;
+        public int indexData = 0;       
+
+        public TR typeReactor;
+
         public GameObject go;
         public GameObject goBum;
         public Transform dispenseLocation;
+
+        public GameObject myLed;
+
         public bool debugLog = false;
         bool stav = false;
         Light oeLight1;
         GameObject oeAudio1;
         AudioClip audiosource;
-
-        public bool MainLihgt = false;
-        public bool MainSound = false;
-        public bool MainTest = false;
+        GameObject oeTools;
+        GameObject oeToolsL;
+        GameObject oeToolsR;
 
         //---test
         private Renderer rend;
@@ -28,6 +39,11 @@
         public bool useKinematic = false;
         public float oeMass = 1f;
         public bool cubeYesSphereNo = true;
+
+        public TF typeFyz;
+        public bool addNoise = true;
+        public float numRandom = 10; 
+
         public GameObject goCon0;
         public GameObject goCon;
         public string nameObj = "oeTrig";
@@ -41,8 +57,15 @@
         {
             // test
             goBum = GameObject.Find("oeBum");
-            if (MainLihgt) oeLight1 = GameObject.Find("oeLight1").GetComponent<Light>();
-            if (MainSound) oeAudio1 = GameObject.Find("oeAudio");
+            if (typeReactor == TR.lightR) { stav = true; oeLight1 = GameObject.Find("oeLight1").GetComponent<Light>(); }
+            if (typeReactor == TR.soundR) { stav = true; oeAudio1 = GameObject.Find("oeAudio"); }
+            //if (typeReactor == TR.toolsR) oeTools = GameObject.Find("oeTools");
+            oeTools = GameObject.Find("oeTools"); //oeTools.SetActive(false);
+            oeToolsL = GameObject.Find("oeToolsL"); // oeToolsL.SetActive(false);
+            oeToolsR = GameObject.Find("oeToolsR"); //oeToolsR.SetActive(false);
+
+
+            myLed.SetActive(stav);
 
             buttonEvents = GetComponent<VRTK_Button_UnityEvents>();
             if (buttonEvents == null)
@@ -59,10 +82,58 @@
             //GameObject newGo = (GameObject)Instantiate(go, dispenseLocation.position, Quaternion.identity);
             //Destroy(newGo, 10f);
             stav = !stav;
-            if (debugLog) Debug.Log("--- oeButtonReactor "+indexData + ": "+stav);
-            if (MainLihgt) oeLight1.enabled = !oeLight1.enabled;
-            if (MainSound) oeAudio1.active = stav;
-            if (MainTest) oeGenerateObject();
+
+            switch (typeReactor)
+            {
+                case TR.noneR:
+                                       break;
+
+                case TR.lightR:
+                    oeLight1.enabled = !oeLight1.enabled;
+                    myLed.SetActive(oeLight1.enabled);
+                    break;
+
+                case TR.soundR:
+                    oeAudio1.SetActive(stav);
+                    myLed.SetActive(stav);
+                    break;
+
+                case TR.toolsR:
+                    oeTools.SetActive(stav);
+                    myLed.SetActive(stav);
+                    break;
+
+                case TR.leftR:
+                    oeToolsL.SetActive(stav);
+                    myLed.SetActive(stav);
+                    break;
+
+                case TR.rightR:
+                    oeToolsR.SetActive(stav);
+                    myLed.SetActive(stav);
+                    break;
+
+                case TR.generatorR:
+                    oeGenerateObject();
+                    break;
+
+
+                default:
+                    Debug.Log("err reactor Type");
+                    break;
+            }
+
+
+
+
+
+
+
+
+            if (debugLog) Debug.Log("--- oeButtonReactor " + indexData + ": " + stav);
+       
+           
+          
             
 
         }
@@ -92,8 +163,29 @@
 
             Rigidbody gameObjectsRigidBody = go.AddComponent<Rigidbody>(); // Add the rigidbody.
             gameObjectsRigidBody.mass = oeMass; // Set the GO's mass to 5 via the Rigidbod
-           go.GetComponent<Rigidbody>().useGravity = useGravity;
-           go.GetComponent<Rigidbody>().isKinematic = useKinematic;  
+
+            switch (typeFyz)
+            {
+                case TF.gravity:
+                    go.GetComponent<Rigidbody>().useGravity = true;
+                    go.GetComponent<Rigidbody>().isKinematic = false;
+                    break;
+
+                case TF.kinematic:
+                    go.GetComponent<Rigidbody>().useGravity = false;
+                    go.GetComponent<Rigidbody>().isKinematic = false;
+                    break;
+
+                case TF.random:
+                    go.GetComponent<Rigidbody>().useGravity = stav;
+                    go.GetComponent<Rigidbody>().isKinematic = false;
+                   break;
+                
+                default:
+                    Debug.Log("err fyz Type");
+                    break;
+            }
+            
 
             go.name = nameObj + "." + cnt;
             Debug.Log(go.name);
@@ -122,6 +214,15 @@
                 }
             }
 
+
+            if (addNoise)
+            {
+                float deltaRnd1 = Mathf.Floor(Random.Range(0, numRandom))/100;
+                float deltaRnd2 = Mathf.Floor(Random.Range(0, numRandom))/100;
+                float deltaRnd3 = Mathf.Floor(Random.Range(0, numRandom))/100;
+                go.transform.position = go.transform.position + new Vector3(deltaRnd1, deltaRnd2, deltaRnd3);
+            }
+           
             go.transform.localScale = new Vector3(scale * oeData0, scale * oeData0, scale * oeData0);
 
 

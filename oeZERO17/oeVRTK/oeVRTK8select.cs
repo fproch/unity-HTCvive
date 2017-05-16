@@ -31,6 +31,9 @@ namespace VRTK.Examples
         GameObject go7;
         GameObject goHO1;
 
+        public GameObject g1;
+        public GameObject g2;
+        public GameObject g3;
 
         TextMesh toStatus; //beeTextStatus
         TextMesh to1;
@@ -94,6 +97,10 @@ namespace VRTK.Examples
             go5.SetActive(false);
             go6.SetActive(false);
             go7.SetActive(false);
+
+            g1.SetActive(false);
+            g2.SetActive(false);
+            g3.SetActive(false);
         }
 
 
@@ -118,12 +125,15 @@ namespace VRTK.Examples
                     break;
                 case 1:
                     go1.SetActive(true);
+                    g1.SetActive(true);
                     break;
                 case 2:
                     go2.SetActive(true);
+                    g2.SetActive(true);
                     break;
                 case 3:
                     go3.SetActive(true);
+                    g3.SetActive(true);
                     break;
                 case 4:
                     go4.SetActive(true);
@@ -136,6 +146,9 @@ namespace VRTK.Examples
                     break;
                 case 7:
                     go7.SetActive(true);
+                    g1.SetActive(true);
+                    g2.SetActive(true);
+                    g3.SetActive(true);
                     break;
 
                 default:
