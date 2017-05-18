@@ -8,7 +8,12 @@ public class oeKeybSound : MonoBehaviour
     public GameObject snd1;
     public GameObject snd2;
     public GameObject snd3;
-    
+
+    public bool rndSnd2 = false;
+    public bool beatSnd3 = false;
+    public int everyFPS = 500;
+    public int volume3 = 50;
+
     public bool debugLog = false;
     int cntU = 0;
     int cntKbd = 0;
@@ -34,10 +39,24 @@ public class oeKeybSound : MonoBehaviour
         
         if (Input.GetKey(KeyCode.P))
         {
+            if (debugLog) Debug.Log(cntU + " > P-ok: " + cntKbd);
             cntKbd++;
-            if (debugLog) Debug.Log(cntU + " > P-ok: "+ cntKbd);
-        }    
+            play2();
+            //snd2.GetComponent<AudioSource>().volume = (float)oeData0 / 100;
+        }
 
+        if (rndSnd2)
+        {
+            if (cntU % 1000 == 0) play2();
+        }
+
+
+
+        if (beatSnd3)
+        {
+            if (cntU % everyFPS == 0) play3();
+        }
+        
 
         // movement
         /*
@@ -52,4 +71,20 @@ public class oeKeybSound : MonoBehaviour
         }
         */
         }
+
+    void play2()
+    {
+        snd2.SetActive(false);
+        snd2.SetActive(true); ///sound1.ok 
+    }
+
+    void play3()
+    {
+        snd3.SetActive(false);
+        snd3.SetActive(true); ///sound1.ok 
+        snd3.GetComponent<AudioSource>().volume = volume3 * 0.01f; //(float)oeData0 / 100;
+    }
+
+
+
 }
