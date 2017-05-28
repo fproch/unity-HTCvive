@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//https://docs.unity3d.com/ScriptReference/LineRenderer.SetPosition.html
+//----------------------------------------------------------------------
 
 public class oeCanvasND : MonoBehaviour {
 
@@ -8,11 +10,15 @@ public class oeCanvasND : MonoBehaviour {
     public bool showCenter = true;
     public bool showRandomTestStatic = false;
     public bool showRandomTest = true;
+    public bool drawLines = false;
+    public float lineWidth = 0.01f;
+
     public int numRnd = 100;
     int rndDim = 50;
     public float sizeRnd = 0.05f;
 
     public bool isDynamic = false;
+    public bool isDynamic2 = false;
     int cntU;
     public int deltaRndEvery = 100;
 
@@ -25,6 +31,7 @@ public class oeCanvasND : MonoBehaviour {
     Vector3[] data3D0; //array of 3D vector
     Vector3[] data3D; //
     oe3Dint[] data3Dint; //
+    LineRenderer[] line;
 
     // Use this for initialization
     void Start() {
@@ -89,7 +96,6 @@ public class oeCanvasND : MonoBehaviour {
 
         if (showRandomTest)
         {
-
            initRnd();
            createRnd();
            /* for (int iData = 0; iData < numRnd; iData++)
@@ -104,7 +110,6 @@ public class oeCanvasND : MonoBehaviour {
                 rend.material.color = Color.white;
 
             }*/
-
         }
     }
 
@@ -118,32 +123,32 @@ public class oeCanvasND : MonoBehaviour {
                 changeRnd(new oe3Dint(0, 0, 1));
                 updateRnd();
             }
-           /* {
 
-                for (int iData = 0; iData < numRnd; iData++)
-                {
-                    goData = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    goCenter.name = "goRnd";
+            if (isDynamic2)
+            {
+                changeRnd2();
+                updateRnd();
+            }
 
-                    goData.transform.localScale = new Vector3(sizeRnd, sizeRnd, sizeRnd);
-                    goData.transform.localPosition = transform.localPosition + new Vector3((float)(Random.Range(0, rndDim * 2) - rndDim) / 100, (float)(Random.Range(0, rndDim * 2) - rndDim) / 100, (float)(Random.Range(0, rndDim * 2) - rndDim) / 100);
+            /* {
+                 for (int iData = 0; iData < numRnd; iData++)
+                 {
+                     goData = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                     goCenter.name = "goRnd";
 
-                    Renderer rend = goData.GetComponent<Renderer>();
-                    var randomC = Random.Range(1, 10);
-                    if (randomC == 3) rend.material.color = Color.red;
-                    else rend.material.color = Color.white;
-                    //var randomD = Random.Range(150, 200);
-                    Destroy(goData, 50);
+                     goData.transform.localScale = new Vector3(sizeRnd, sizeRnd, sizeRnd);
+                     goData.transform.localPosition = transform.localPosition + new Vector3((float)(Random.Range(0, rndDim * 2) - rndDim) / 100, (float)(Random.Range(0, rndDim * 2) - rndDim) / 100, (float)(Random.Range(0, rndDim * 2) - rndDim) / 100);
 
-                }
+                     Renderer rend = goData.GetComponent<Renderer>();
+                     var randomC = Random.Range(1, 10);
+                     if (randomC == 3) rend.material.color = Color.red;
+                     else rend.material.color = Color.white;
+                     //var randomD = Random.Range(150, 200);
+                     Destroy(goData, 50);
 
-
-            }*/
+                 }
+             }*/
         }
-
-
-
-
     }
 
     //------------------------------------------------------
@@ -152,6 +157,8 @@ public class oeCanvasND : MonoBehaviour {
         if (debugLogAll) Debug.Log("---------------initRnd()");
         data3Dint = new oe3Dint[numRnd];
         goDataArr = new GameObject[numRnd];
+        line = new LineRenderer[numRnd];
+
         //data3D = new Vector3[numRnd];
 
         for (int iData = 0; iData < numRnd; iData++)
@@ -181,6 +188,31 @@ public class oeCanvasND : MonoBehaviour {
             var randomC = Random.Range(1, 10);
             if (randomC == 3) rend.material.color = Color.red;
             else rend.material.color = Color.white;
+
+            if (drawLines)
+            {
+
+                //line[iData] = GetComponent<LineRenderer>(); //ok pro updatre
+                line[iData] = goDataArr[iData].AddComponent<LineRenderer>();
+                line[iData].material = new Material(Shader.Find("Particles/Additive"));
+                //line[iData] = goDataArr[iData].AddComponent<LineRenderer>;
+      
+
+                line[iData].SetWidth(lineWidth, lineWidth*2);
+                //line.SetColor(Color.red, Color.yellow);
+                
+                line[iData].startColor = Color.red;
+                line[iData].endColor = Color.yellow;
+                //lineRenderer = thisCamera.AddComponent(LineRenderer);
+                line[iData].SetVertexCount(2);
+                //lineRenderer.numPositions =2 ;
+                line[iData].SetPosition(0, transform.position);
+                line[iData].SetPosition(1, goDataArr[iData].transform.localPosition);
+
+            }
+
+
+
             //var randomD = Random.Range(150, 200);
             //Destroy(goDataArr[iData], 50);
         }
@@ -195,6 +227,21 @@ public class oeCanvasND : MonoBehaviour {
             data3Dint[iData].x = data3Dint[iData].x + moveVectorint.x;
             data3Dint[iData].y = data3Dint[iData].y + moveVectorint.y;
             data3Dint[iData].z = data3Dint[iData].z + moveVectorint.z;
+            //goDataArr[iData].transform.localPosition = goDataArr[iData].transform.localPosition + moveVector;
+            //goDataArr[iData].transform.localPosition = transform.localPosition + new Vector3((float)(data3Dint[iData].x) / 100, (float)(data3Dint[iData].y) / 100, (float)(data3Dint[iData].z) / 100);
+        }
+    }
+
+
+    void changeRnd2()
+    {
+        //data3Dint = new oe3Dint[numRnd];
+
+        for (int iData = 0; iData < numRnd; iData++)
+        {
+            data3Dint[iData].x = data3Dint[iData].x + (Random.Range(0, rndDim * 2) - rndDim)/20;
+            data3Dint[iData].y = data3Dint[iData].y + (Random.Range(0, rndDim * 2) - rndDim) / 20;
+            data3Dint[iData].z = data3Dint[iData].z + (Random.Range(0, rndDim * 2) - rndDim) / 20;
             //goDataArr[iData].transform.localPosition = goDataArr[iData].transform.localPosition + moveVector;
             //goDataArr[iData].transform.localPosition = transform.localPosition + new Vector3((float)(data3Dint[iData].x) / 100, (float)(data3Dint[iData].y) / 100, (float)(data3Dint[iData].z) / 100);
         }
