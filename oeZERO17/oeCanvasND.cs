@@ -8,13 +8,19 @@ public class oeCanvasND : MonoBehaviour {
 
     public float canvasSize = 2;
     public bool showCenter = true;
+    public bool distanceColor = false;
+    public float distanceCenter = 0.5f;
     public bool showRandomTestStatic = false;
     public bool showRandomTest = true;
-    public bool drawLines = false;
+    public bool drawLinesToCenter = false;
+    public bool drawLinesAll = false;
     public float lineWidth = 0.01f;
 
+
+    [Tooltip("Number of generated data")]
     public int numRnd = 100;
-    int rndDim = 50;
+    [Tooltip("Radius-Size 50 defa.")]
+    public int rndDim = 50;
     public float sizeRnd = 0.05f;
 
     public bool isDynamic = false;
@@ -31,7 +37,7 @@ public class oeCanvasND : MonoBehaviour {
     public Color fontColor;
     public bool showLabels = false;
 
-
+    [Tooltip("For debuging or testing")]
     public bool debugLog = false;
     public bool debugLogAll = false;
 
@@ -39,6 +45,9 @@ public class oeCanvasND : MonoBehaviour {
     Vector3[] data3D; //
     oe3Dint[] data3Dint; //
     LineRenderer[] line;
+    LineRenderer[,] lineAll;
+    GameObject[,] goDataArr2;
+
     private GameObject label1;
 
     // Use this for initialization
@@ -77,7 +86,8 @@ public class oeCanvasND : MonoBehaviour {
             goCenter.name = "goData";
 
             goData.transform.localScale = new Vector3(canvasSize / 20, canvasSize / 20, canvasSize / 20);
-            goData.transform.localPosition = transform.localPosition + data3D0[iData];
+            goData.transform.localPosition = transform.localPosition + data3D0[iData];           
+            goData.transform.eulerAngles = transform.eulerAngles;
 
             Renderer rend = goData.GetComponent<Renderer>();
             rend.material.color = Color.black;
@@ -97,8 +107,13 @@ public class oeCanvasND : MonoBehaviour {
 
                  Renderer rend = goData.GetComponent<Renderer>();
                  rend.material.color = Color.white;
+                float dist = Vector3.Distance(transform.localPosition, goData.transform.localPosition);
+                if (distanceColor)
+                {
+                    if (dist < distanceCenter) rend.material.color = Color.red;
+                }
 
-             }
+            }
         }
         
 
@@ -195,26 +210,25 @@ public class oeCanvasND : MonoBehaviour {
             Renderer rend = goDataArr[iData].GetComponent<Renderer>();
             var randomC = Random.Range(1, 10);
             if (randomC == 3) rend.material.color = Color.red;
-            else rend.material.color = Color.white;
-
-            if (showLabels)
+            float dist = Vector3.Distance(transform.localPosition, goDataArr[iData].transform.localPosition);
+            if (distanceColor)
             {
-                oeText1(goDataArr[iData], iData.ToString());
+                if (dist < distanceCenter) rend.material.color = Color.gray;
             }
 
+            else rend.material.color = Color.white;
 
-            if (drawLines)
+            if (showLabels) oeText1(goDataArr[iData], iData.ToString());
+            
+            if (drawLinesToCenter)
             {
-
                 //line[iData] = GetComponent<LineRenderer>(); //ok pro updatre
                 line[iData] = goDataArr[iData].AddComponent<LineRenderer>();
                 line[iData].material = new Material(Shader.Find("Particles/Additive"));
-                //line[iData] = goDataArr[iData].AddComponent<LineRenderer>;
-      
+                //line[iData] = goDataArr[iData].AddComponent<LineRenderer>;      
 
-                line[iData].SetWidth(lineWidth, lineWidth*2);
-                //line.SetColor(Color.red, Color.yellow);
-                
+                line[iData].SetWidth(lineWidth*2, lineWidth*3);
+                //line.SetColor(Color.red, Color.yellow);                
                 line[iData].startColor = Color.red;
                 line[iData].endColor = Color.yellow;
                 //lineRenderer = thisCamera.AddComponent(LineRenderer);
@@ -222,16 +236,37 @@ public class oeCanvasND : MonoBehaviour {
                 //lineRenderer.numPositions =2 ;
                 line[iData].SetPosition(0, transform.position);
                 line[iData].SetPosition(1, goDataArr[iData].transform.localPosition);
-
             }
-
-
-
-
-
 
             //var randomD = Random.Range(150, 200);
             //Destroy(goDataArr[iData], 50);
+        }
+
+        if (drawLinesAll)
+        {
+            if (debugLogAll) Debug.Log("---------------drawLinesAll()");
+            goDataArr2 = new GameObject[numRnd,numRnd];
+            lineAll = new LineRenderer[numRnd,numRnd];
+            for (int iData = 0; iData < numRnd; iData++)
+            {
+                //int jData = 0;
+                for (int jData = 0; jData < numRnd; jData++)
+                {
+                    if (debugLogAll) Debug.Log(iData + "," + jData + " > ");
+                    //int k = iData * jData + jData;
+                    goDataArr2[iData, jData] = GameObject.CreatePrimitive(PrimitiveType.Sphere);    //Cube); ///must exist
+                    lineAll[iData ,jData] = goDataArr2[iData,jData].AddComponent<LineRenderer>();   //one objest > one compolent LR!
+                    
+                    lineAll[iData, jData].material = new Material(Shader.Find("Particles/Additive"));
+                    lineAll[iData, jData].SetWidth(lineWidth, lineWidth);
+                    lineAll[iData, jData].startColor = Color.white;
+                    lineAll[iData, jData].endColor = Color.blue;
+                    lineAll[iData, jData].SetVertexCount(2);
+                    //lineRenderer.numPositions =2 ;
+                    lineAll[iData, jData].SetPosition(0, goDataArr[iData].transform.localPosition);
+                    lineAll[iData, jData].SetPosition(1, goDataArr[jData].transform.localPosition);                   
+                } 
+            }
         }
     }
 
@@ -301,29 +336,20 @@ public class oeCanvasND : MonoBehaviour {
         label1.GetComponent<TextMesh>().text = "   " + txt;
     }
 
-
-
     public class oe3Dint
-    {
-
-        //public static int x;
-        //public static int y;
-        //public static int z;
-
+    {    
         public int x;
         public int y;
         public int z;
 
         // Use this for initialization
         //void Start () {	}
-
-        public oe3Dint(int sx, int sy, int sz)
+        public oe3Dint(int sx, int sy, int sz) //costructor
         {
             x = sx;
             y = sy;
             z = sz;
         }
-
 
         public void set(int sx, int sy, int sz)
         {
@@ -331,9 +357,5 @@ public class oeCanvasND : MonoBehaviour {
             y = sy;
             z = sz;
         }
-
-        
     }
-
-
 }
