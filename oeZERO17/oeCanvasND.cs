@@ -25,6 +25,13 @@ public class oeCanvasND : MonoBehaviour {
     GameObject goCenter;
     GameObject goData;
     GameObject[] goDataArr;
+
+    public float characterSize = 0.01f;
+    public int fontSize = 12;
+    public Color fontColor;
+    public bool showLabels = false;
+
+
     public bool debugLog = false;
     public bool debugLogAll = false;
 
@@ -32,6 +39,7 @@ public class oeCanvasND : MonoBehaviour {
     Vector3[] data3D; //
     oe3Dint[] data3Dint; //
     LineRenderer[] line;
+    private GameObject label1;
 
     // Use this for initialization
     void Start() {
@@ -189,6 +197,12 @@ public class oeCanvasND : MonoBehaviour {
             if (randomC == 3) rend.material.color = Color.red;
             else rend.material.color = Color.white;
 
+            if (showLabels)
+            {
+                oeText1(goDataArr[iData], iData.ToString());
+            }
+
+
             if (drawLines)
             {
 
@@ -210,6 +224,9 @@ public class oeCanvasND : MonoBehaviour {
                 line[iData].SetPosition(1, goDataArr[iData].transform.localPosition);
 
             }
+
+
+
 
 
 
@@ -258,6 +275,32 @@ public class oeCanvasND : MonoBehaviour {
             goDataArr[iData].transform.localPosition = transform.localPosition + new Vector3((float)(data3Dint[iData].x) / 100, (float)(data3Dint[iData].y) / 100, (float)(data3Dint[iData].z) / 100);
         }
     }
+
+
+    private void oeText1(GameObject strartTransform,  string txt)
+    {
+        label1 = new GameObject("tx");
+        label1.transform.position = strartTransform.transform.position + new Vector3(0, sizeRnd, 0);
+        label1.transform.eulerAngles = strartTransform.transform.eulerAngles;
+        /*
+        InputUI.transform.parent = transform;
+        InputUI.transform.position = transform.position
+                                         + transform.forward * 0.32f                     //moving it in front of the cam so that it can be seen at all
+                                         + transform.right * cameraWidth * -0.000215f    //positioning to the bottom-left of the screen
+                                         + transform.up * -0.17f;                        //if the camera dimensions change - text stays on bottom, but shifts side-wise
+                                                                                        //  -> first if in Update()
+         InputUI.transform.rotation = transform.rotation;
+         InputUI.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);          */
+
+        label1.AddComponent<TextMesh>();
+        label1.GetComponent<TextMesh>().characterSize = characterSize; // This is to ensure
+        label1.GetComponent<TextMesh>().fontSize = fontSize;       // that the text is not blurry
+        //label1.GetComponent<TextMesh>().font.material.color = fontColor;
+        label1.GetComponent<TextMesh>().anchor = TextAnchor.LowerLeft;
+
+        label1.GetComponent<TextMesh>().text = "   " + txt;
+    }
+
 
 
     public class oe3Dint
