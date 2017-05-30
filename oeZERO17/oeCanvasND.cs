@@ -4,7 +4,14 @@ using UnityEngine;
 //https://docs.unity3d.com/ScriptReference/LineRenderer.SetPosition.html
 //----------------------------------------------------------------------
 
+
 public class oeCanvasND : MonoBehaviour {
+
+    public enum TF //type fyz
+    { none, kinematic, gravity, both, random }
+
+    public enum TO //type object
+    {cube, sphere }
 
     public float canvasSize = 2;
     public bool showCenter = true;
@@ -12,13 +19,20 @@ public class oeCanvasND : MonoBehaviour {
     public float distanceCenter = 0.5f;
     public bool showRandomTestStatic = false;
     public bool showRandomTest = true;
+    public string s______________________________ = "---";
+    public Color lineStart;
+    public Color lineEnd;
     public bool drawLinesToCenter = false;
+    public bool updateLinesToCenter = false;
+    public bool drawLinesLine = false;
     public bool drawLinesAll = false;
+    
     public float lineWidth = 0.01f;
 
-
+    public TO typeObject;
     [Tooltip("Number of generated data")]
     public int numRnd = 100;
+    public TF typeFyz;
     [Tooltip("Radius-Size 50 defa.")]
     public int rndDim = 50;
     public float sizeRnd = 0.05f;
@@ -30,7 +44,9 @@ public class oeCanvasND : MonoBehaviour {
 
     GameObject goCenter;
     GameObject goData;
-    GameObject[] goDataArr;
+    GameObject[] goDataArr;  //basic
+    GameObject[,] goDataArr2; //lineAll
+    GameObject[] goDataArr3; //lineLine
 
     public float characterSize = 0.01f;
     public int fontSize = 12;
@@ -45,8 +61,9 @@ public class oeCanvasND : MonoBehaviour {
     Vector3[] data3D; //
     oe3Dint[] data3Dint; //
     LineRenderer[] line;
+    LineRenderer[] lineLine;
     LineRenderer[,] lineAll;
-    GameObject[,] goDataArr2;
+   
 
     private GameObject label1;
 
@@ -201,11 +218,57 @@ public class oeCanvasND : MonoBehaviour {
 
         for (int iData = 0; iData < numRnd; iData++)
         {
-            goDataArr[iData] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+            switch (typeObject)
+            {
+                case TO.cube:
+                    goDataArr[iData] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    break;
+
+                case TO.sphere:
+                    goDataArr[iData] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    break;              
+
+                default:
+                    goDataArr[iData] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    //Debug.Log("err obj Type");
+                    break;
+            }
+            
+           
             goCenter.name = "goRnd";
 
             goDataArr[iData].transform.localScale = new Vector3(sizeRnd, sizeRnd, sizeRnd);
             goDataArr[iData].transform.localPosition = transform.localPosition + new Vector3((float)(data3Dint[iData].x)/100, (float)(data3Dint[iData].y) / 100, (float)(data3Dint[iData].z) / 100);
+
+            switch (typeFyz)
+            {
+                case TF.none:
+                    //goDataArr[iData].GetComponent<Rigidbody>().useGravity = true;
+                    //goDataArr[iData].GetComponent<Rigidbody>().isKinematic = false;
+                    break;
+
+                case TF.gravity:
+                    goDataArr[iData].GetComponent<Rigidbody>().useGravity = true;
+                    goDataArr[iData].GetComponent<Rigidbody>().isKinematic = false;
+                    break;
+
+                case TF.kinematic:
+                    goDataArr[iData].GetComponent<Rigidbody>().useGravity = false;
+                    goDataArr[iData].GetComponent<Rigidbody>().isKinematic = false;
+                    break;
+
+                case TF.random:
+                    goDataArr[iData].GetComponent<Rigidbody>().useGravity = false;
+                    goDataArr[iData].GetComponent<Rigidbody>().isKinematic = true;
+                    break;
+
+                default:
+                    Debug.Log("err fyz Type");
+                    break;
+            }
+
+
 
             Renderer rend = goDataArr[iData].GetComponent<Renderer>();
             var randomC = Random.Range(1, 10);
@@ -268,6 +331,32 @@ public class oeCanvasND : MonoBehaviour {
                 } 
             }
         }
+
+        if (drawLinesLine)
+        {
+            if (debugLogAll) Debug.Log("---------------drawLinesLine");
+            goDataArr3 = new GameObject[numRnd];
+            lineLine = new LineRenderer[numRnd+1];
+            for (int iData = 0; iData < numRnd-1; iData++)
+            {            
+                   
+                goDataArr3[iData] = GameObject.CreatePrimitive(PrimitiveType.Sphere);    //Cube); ///must exist
+                lineLine[iData] = goDataArr3[iData].AddComponent<LineRenderer>();   //one objest > one compolent LR!
+
+                lineLine[iData].material = new Material(Shader.Find("Particles/Additive"));
+                lineLine[iData].SetWidth(lineWidth, lineWidth);
+                lineLine[iData].startColor = Color.blue;
+                lineLine[iData].endColor = Color.white;
+                lineLine[iData].SetVertexCount(2);
+                //lineRenderer.numPositions =2 ;
+                lineLine[iData].SetPosition(0, goDataArr[iData].transform.localPosition);
+                lineLine[iData].SetPosition(1, goDataArr[iData+1].transform.localPosition);
+               
+            }
+        }
+
+
+
     }
 
     void changeRnd(oe3Dint moveVectorint)
@@ -303,11 +392,16 @@ public class oeCanvasND : MonoBehaviour {
     void updateRnd()
     {
         //data3Dint = new oe3Dint[numRnd];
-      
+
         for (int iData = 0; iData < numRnd; iData++)
         {
             //goDataArr[iData].transform.localPosition = goDataArr[iData].transform.localPosition + moveVector;
             goDataArr[iData].transform.localPosition = transform.localPosition + new Vector3((float)(data3Dint[iData].x) / 100, (float)(data3Dint[iData].y) / 100, (float)(data3Dint[iData].z) / 100);
+            if (updateLinesToCenter)
+            {                
+                line[iData].SetPosition(0, transform.position);
+                line[iData].SetPosition(1, goDataArr[iData].transform.localPosition);
+            }
         }
     }
 
