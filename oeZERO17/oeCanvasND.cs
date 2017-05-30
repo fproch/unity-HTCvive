@@ -52,7 +52,12 @@ public class oeCanvasND : MonoBehaviour {
     public int fontSize = 12;
     public Color fontColor;
     public bool showLabels = false;
-
+    public string s_data_____________________________ = "---";
+    string data17File;
+    public string dataFileName = "data3dint.txt";
+    public bool saveData = false;
+    public bool loadData = false;
+        public string s_log_____________________________ = "---";
     [Tooltip("For debuging or testing")]
     public bool debugLog = false;
     public bool debugLogAll = false;
@@ -69,6 +74,7 @@ public class oeCanvasND : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        data17File = Application.dataPath + "/Resources/" + dataFileName;
         data3D0 = new Vector3[8];
         data3D0[0] = new Vector3(1, 1, 1);
         data3D0[1] = new Vector3(-1, -1, -1);
@@ -209,6 +215,24 @@ public class oeCanvasND : MonoBehaviour {
             if (debugLogAll) Debug.Log(iData + ": "+ data3Dint[iData].x + ", "+ data3Dint[iData].y + "," + data3Dint[iData].z);
             //data3Dint[iData] = new oe3Dint(1,2,3);// (Random.Range(0, rndDim * 2) - rndDim);
         }
+
+        if (saveData)
+        {
+            if (debugLogAll) Debug.Log("---------------saveData");
+            string data2save = "";
+            for (int iData = 0; iData < numRnd; iData++)
+            {
+                data2save = data2save + (data3Dint[iData].x).ToString() + "," + (data3Dint[iData].y).ToString() + "," + (data3Dint[iData].z).ToString() + "\n";
+            }
+            if (debugLogAll) Debug.Log(data2save);
+            System.IO.File.WriteAllText(data17File, data2save);
+        }
+
+
+
+
+
+
     }
 
     void createRnd()
@@ -430,8 +454,9 @@ public class oeCanvasND : MonoBehaviour {
         label1.GetComponent<TextMesh>().text = "   " + txt;
     }
 
-    public class oe3Dint
-    {    
+    public class oe3Dint //normalize
+                         //Random.Range(0, rndDim * 2) - rndDim) > 200: (-100 | +100 )
+    {
         public int x;
         public int y;
         public int z;
