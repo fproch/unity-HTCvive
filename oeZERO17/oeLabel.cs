@@ -23,7 +23,7 @@ public class oeLabel : MonoBehaviour
 
 
     private Vector3 startVector; //stred vykresleni matice
-    public Transform strartTransform;
+    public Transform startTransform;
     public bool buttonTranf = false;
 
     public bool doUpdate = false;
@@ -47,12 +47,12 @@ public class oeLabel : MonoBehaviour
         Debug.Log("oeLabel.constructor - " + labelTxt);
         //if (buttonTranf) strartTransform.transform.eulerAngles = strartTransform.eulerAngles + new Vector3(0, 90, 0); 
         //strartTransform.position = strartTransform.position + new Vector3(0,0.1f,0);
-        startVector = strartTransform.position;
+        startVector = startTransform.position;
 
         if (showLabel1) oeText1(labelTxt);
         if (showLabel2 || label2Data) oeText2(labelTxt);
         if (showLabel3) oeText3(labelTxt);
-        if (labelObjName1) label1.GetComponent<TextMesh>().text = strartTransform.name; // this.name;   //"name123";
+        if (labelObjName1) label1.GetComponent<TextMesh>().text = startTransform.name; // this.name;   //"name123";
 
     }
     //------------------------------------------------/start----------------------------------------
@@ -76,27 +76,27 @@ public class oeLabel : MonoBehaviour
 
                 if (buttonTranf)
                 {
-                    label1.transform.position = strartTransform.position + new Vector3(-0.05f, lineOffset(1), 0);
-                    label1.transform.eulerAngles = strartTransform.eulerAngles + new Vector3(90, 90, 90);
+                    label1.transform.position = startTransform.position + new Vector3(-0.05f, lineOffset(1), 0);
+                    label1.transform.eulerAngles = startTransform.eulerAngles + new Vector3(90, 90, 90);
                 }
                 else
                 {
-                    label1.transform.position = strartTransform.position + new Vector3(0, lineOffset(1), 0);
-                    label1.transform.eulerAngles = strartTransform.eulerAngles;
+                    label1.transform.position = startTransform.position + new Vector3(0, lineOffset(1), 0);
+                    label1.transform.eulerAngles = startTransform.eulerAngles;
                 }
             }
 
             if (showLabel2)
             {
-                label2.transform.position = strartTransform.position + new Vector3(0, lineOffset(2), 0);
-                label2.transform.eulerAngles = strartTransform.eulerAngles;
+                label2.transform.position = startTransform.position + new Vector3(0, lineOffset(2), 0);
+                label2.transform.eulerAngles = startTransform.eulerAngles;
                 label2.GetComponent<TextMesh>().text = labelTxt;
             }
 
             if (showLabel3)
             {
-                label3.transform.position = strartTransform.position + new Vector3(0, lineOffset(3), 0);
-                label3.transform.eulerAngles = strartTransform.eulerAngles;
+                label3.transform.position = startTransform.position + new Vector3(0, lineOffset(3), 0);
+                label3.transform.eulerAngles = startTransform.eulerAngles;
                 var random1 = Random.Range(1000000, 9999999);
                 if (labelRnd3) label3.GetComponent<TextMesh>().text = random1.ToString() + "\n" + (random1 / 2).ToString() + "\n" + (random1 / 3).ToString();
 
@@ -105,8 +105,8 @@ public class oeLabel : MonoBehaviour
             if (label2Data)
             {
                 // oeCommonDataContainer.setArrInt(indexData, (int)e.normalizedValue);
-                label2.transform.position = strartTransform.position + new Vector3(0, lineOffset(2), 0);
-                label2.transform.eulerAngles = strartTransform.eulerAngles;
+                label2.transform.position = startTransform.position + new Vector3(0, lineOffset(2), 0);
+                label2.transform.eulerAngles = startTransform.eulerAngles;
                 label2.GetComponent<TextMesh>().text = dataIndex.ToString() + ": " + oeCommonDataContainer.getArrInt(dataIndex);//  + "\n" + oeCommonDataContainer.getArrStr(dataIndex);
             }
 
@@ -120,8 +120,8 @@ public class oeLabel : MonoBehaviour
     private void oeText1(string txt)
     {
         label1 = new GameObject("tx");
-        label1.transform.position = strartTransform.position + new Vector3(0, lineOffset(1), 0);
-        label1.transform.eulerAngles = strartTransform.eulerAngles;
+        label1.transform.position = startTransform.position + new Vector3(0, lineOffset(1), 0);
+        label1.transform.eulerAngles = startTransform.eulerAngles;
         /*
         InputUI.transform.parent = transform;
         InputUI.transform.position = transform.position
@@ -144,8 +144,8 @@ public class oeLabel : MonoBehaviour
     private void oeText2(string txt)
     {
         label2 = new GameObject("tx2");
-        label2.transform.position = strartTransform.position + new Vector3(0, lineOffset(2), 0);
-        label2.transform.eulerAngles = strartTransform.eulerAngles;
+        label2.transform.position = startTransform.position + new Vector3(0, lineOffset(2), 0);
+        label2.transform.eulerAngles = startTransform.eulerAngles;
 
         label2.AddComponent<TextMesh>();
         label2.GetComponent<TextMesh>().characterSize = characterSize; // This is to ensure
@@ -158,9 +158,9 @@ public class oeLabel : MonoBehaviour
     private void oeText3(string txt)
     {
         label3 = new GameObject("tx3");
-        label3.transform.position = strartTransform.position + new Vector3(0, lineOffset(3), 0);
+        label3.transform.position = startTransform.position + new Vector3(0, lineOffset(3), 0);
 
-        label3.transform.eulerAngles = strartTransform.eulerAngles;
+        label3.transform.eulerAngles = startTransform.eulerAngles;
 
         label3.AddComponent<TextMesh>();
         label3.GetComponent<TextMesh>().characterSize = characterSize; // This is to ensure

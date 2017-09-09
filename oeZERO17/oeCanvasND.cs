@@ -26,6 +26,8 @@ public class oeCanvasND : MonoBehaviour {
     public bool updateLinesToCenter = false;
     public bool drawLinesLine = false;
     public bool drawLinesAll = false;
+    public bool drawLinesbezier = false;
+    public int numBezier = 5;
     
     public float lineWidth = 0.01f;
 
@@ -47,6 +49,20 @@ public class oeCanvasND : MonoBehaviour {
     GameObject[] goDataArr;  //basic
     GameObject[,] goDataArr2; //lineAll
     GameObject[] goDataArr3; //lineLine
+
+    private List<GameObject> controlObjects;
+    private List<Vector3> controlPoints;
+    private LineRenderer lineRenderer;
+    private List<Vector3> drawingPoints;
+    private int actualControlIndex;
+    public float moveStrength = 0.3f;
+    //public bool only5dynamic = false;
+    public GameObject target1;
+    public GameObject target2;
+    public GameObject target3;
+    public GameObject target4;
+    public GameObject target5;
+
 
     public float characterSize = 0.01f;
     public int fontSize = 12;
@@ -379,6 +395,35 @@ public class oeCanvasND : MonoBehaviour {
             }
         }
 
+        if (drawLinesbezier)
+        {            
+            controlObjects = new List<GameObject>();
+            controlPoints = new List<Vector3>();
+
+            int i = 0;
+
+            target1 = goDataArr[i];
+            target2 = goDataArr[i+1];
+            target3 = goDataArr[i+2];
+            target4 = goDataArr[i+3];
+            target5 = goDataArr[i+4];
+            
+            controlObjects.Add(target1);
+            controlPoints.Add(target1.transform.position);
+            controlObjects.Add(target2);
+            controlPoints.Add(target2.transform.position);
+            controlObjects.Add(target3);
+            controlPoints.Add(target3.transform.position);
+            controlObjects.Add(target4);
+            controlPoints.Add(target4.transform.position);
+            controlObjects.Add(target5);
+            controlPoints.Add(target5.transform.position);
+
+            CreateBezier();
+        }
+
+
+
 
 
     }
@@ -454,6 +499,31 @@ public class oeCanvasND : MonoBehaviour {
         label1.GetComponent<TextMesh>().text = "   " + txt;
     }
 
+    //-----------------bezier--------------------------
+    private void CreateBezier()
+    {
+        BezierPath bezierPath = new BezierPath();
+        // bezierPath.SamplePoints(controlObjects, 0.01f, 0.02f, 4f);
+        bezierPath.Interpolate(controlPoints, 4f);
+        drawingPoints = bezierPath.GetDrawingPoints2();
+        SetLinePoints(drawingPoints);
+    }
+
+
+    private void SetLinePoints(List<Vector3> drawingPoints)
+    {
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.SetVertexCount(drawingPoints.Count);
+
+        for (int i = 0; i < drawingPoints.Count; i++)
+        {
+            lineRenderer.SetPosition(i, drawingPoints[i]);
+        }
+    }
+
+
+
+    //-------------------------------------------------
     public class oe3Dint //normalize
                          //Random.Range(0, rndDim * 2) - rndDim) > 200: (-100 | +100 )
     {

@@ -18,6 +18,7 @@
 
         public bool slerp = true;
         public bool scale = false;
+        [Tooltip("For debuging or testing")]
         public bool debugLog = false;
 
         public override void StartUsing(GameObject usingObject)
